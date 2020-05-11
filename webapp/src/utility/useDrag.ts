@@ -50,7 +50,7 @@ const dragPosReducer = (
 interface DragDispatchObject {
   start: (e: TouchEvent) => void;
   moving: (e: TouchEvent) => void;
-  finish: (f: any) => void;
+  finish: (f: (e?: TouchEvent) => void) => void;
 }
 
 export const useDrag = (): [number, number, DragDispatchObject] => {
