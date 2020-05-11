@@ -1,0 +1,10 @@
+figure {
+  width: 100%;
+  /* border: solid 1px black; */
+  margin: 0;
+}
+
+figcaption {
+  margin-top: 1em;
+  font-size: 1.25em;
+}

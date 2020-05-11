@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDrag } from "../../utility/useDrag";
-// import "./DishCard.css";
+import "./DishCard.css";
 
 const images: string[] = [
   "brooke-lark-V4MBq8kue3U-unsplash.jpg",
@@ -9,6 +9,11 @@ const images: string[] = [
   "edgar-castrejon-1SPu0KT-Ejg-unsplash.jpg",
   "joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg",
 ];
+
+interface DishCard {
+  url: string;
+  name: string;
+}
 
 const DishCard = () => {
   const [image, setImage] = useState(0);
@@ -44,10 +49,9 @@ const DishCard = () => {
           });
         }}
         src={require(`../../assets/${images[image]}`)}
-        alt="random dish"
         style={{
-          width: 200,
-          height: 300,
+          width: 0.85 * window.innerWidth,
+          height: (3 * 0.85 * window.innerWidth) / 2,
           position: "relative",
           transform: `translate(${deltaX}px, ${deltaY}px)`,
         }}
