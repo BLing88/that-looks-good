@@ -1,5 +1,6 @@
 interface Photo {
   id: string;
+  url: string;
   photographer: string;
   photographerProfileURL: string;
 }
