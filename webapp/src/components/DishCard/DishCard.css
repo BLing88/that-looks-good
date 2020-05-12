@@ -6,5 +6,13 @@ figure {
 
 figcaption {
   margin-top: 1em;
-  font-size: 1.25em;
+  font-size: 1.35em;
+}
+
+img {
+  border-radius: 0.5em;
+}
+
+.attribution {
+  font-size: 0.65em;
 }

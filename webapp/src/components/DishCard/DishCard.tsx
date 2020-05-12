@@ -46,7 +46,7 @@ const DishCard = ({
         }}
       />
       <figcaption>{dish.name}</figcaption>
-      <div>
+      <div className="attribution">
         Photo by{" "}
         <a
           href={
