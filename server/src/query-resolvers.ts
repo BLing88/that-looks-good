@@ -1,17 +1,28 @@
 import Unsplash, { toJson } from "unsplash-js";
 import fetch from "node-fetch";
+declare global {
+  namespace NodeJS {
+    interface Global {
+      fetch: any;
+    }
+  }
+}
+global.fetch = fetch;
 require("dotenv").config();
-const unsplash = new Unsplash({ accessKey: `${process.env.API_KEY}` });
+const unsplash = new Unsplash({
+  accessKey: `${process.env.API_KEY}`,
+  secret: `${process.env.SECRET}`,
+});
 
 interface Dish {
   id: string;
   urls: {
-    custom: string;
+    raw: string;
   };
   user: {
     username: string;
     name: string;
-    portfolio_url: string;
+    links: { html: string };
   };
 }
 
@@ -21,17 +32,16 @@ const getDish = async (_: any, { dishId }: { dishId: string }) => {
     return {
       dishId: dish.id,
       urls: {
-        custom: dish.urls.custom,
+        raw: dish.urls.raw,
       },
       user: {
         username: dish.user.username,
         name: dish.user.name,
-        portfolio_url: dish.user.portfolio_url,
+        htmlUrl: dish.user.links.html,
       },
     };
   } catch (err) {
-    console.error(err);
-    throw new Error("Error getting dish");
+    throw new Error(`Error getting dish: ${err}`);
   }
 };
 

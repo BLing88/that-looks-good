@@ -1,4 +1,4 @@
-const typeDefsString = `
+export const typeDefsString = `
     type Query {
         getDish(dishId: ID!): Dish
     }
@@ -12,12 +12,10 @@ const typeDefsString = `
     type User {
         name: String!
         username: String!
-        portfolio_url: String!
+        htmlUrl: String!
     }
 
     type Urls {
-        custom: String!
+        raw: String!
     }
 `;
-
-export { typeDefsString };

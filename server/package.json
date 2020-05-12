@@ -12,9 +12,11 @@
     "@babel/preset-typescript": "^7.9.0",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.5",
+    "@types/node-fetch": "^2.5.7",
     "@types/unsplash-js": "^6.0.1",
     "apollo-server-testing": "^2.13.1",
     "jest": "^26.0.1",
+    "serverless-plugin-typescript": "^1.1.9",
     "ts-jest": "^25.5.1",
     "typescript": "^3.8.3"
   },

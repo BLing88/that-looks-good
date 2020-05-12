@@ -12,14 +12,20 @@ const resolvers = {
   },
 };
 
-export const server = new ApolloServer({
+const server = new ApolloServer({
   typeDefs,
   resolvers,
+  playground: { endpoint: "/dev/graphql" },
 });
 
-export const handler = server.createHandler({
+const handler = server.createHandler({
   cors: {
     origin: "*",
     credentials: true,
   },
 });
+
+module.exports = {
+  server,
+  handler,
+};
