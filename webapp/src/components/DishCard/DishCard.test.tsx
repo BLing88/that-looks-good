@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import "./App.css";
-import { DishCard } from "./components/DishCard";
-import { Header } from "./components/Header";
-import { Dish } from "./utility/Dish";
+import React from "react";
+import { render } from "@testing-library/react";
+import { DishCard } from "./DishCard";
 
 const dishes: Dish[] = [
   {
@@ -57,27 +55,15 @@ const dishes: Dish[] = [
   },
 ];
 
-function App() {
-  const [dishNumber, setDishNumber] = useState(0);
-  const changeImageHandler = (direction: string): void => {
-    setDishNumber((dishNumber: number): number => {
-      if (direction === "forward") {
-        return (dishNumber + 1) % dishes.length;
-      } else {
-        return (dishNumber - 1 + dishes.length) % dishes.length;
-      }
-    });
-  };
-
-  return (
-    <div className="App">
-      <Header />
-      <DishCard
-        dish={dishes[dishNumber]}
-        changeImageHandler={changeImageHandler}
-      />
-    </div>
-  );
-}
-
-export default App;
+describe("DishCard ", () => {
+  test("properly attributes photographer and Unsplash", () => {
+    const dish = dishes[0];
+    const { getByText } = render(
+      <DishCard dish={dish} changeImageHandler={jest.fn()} />
+    );
+    expect(getByText("Unsplash")).toBeInTheDocument();
+    expect(getByText(/^photo by/i)).toBeInTheDocument();
+    expect(getByText(dish.name)).toBeInTheDocument();
+    expect(getByText(dish.photo.photographer)).toBeInTheDocument();
+  });
+});

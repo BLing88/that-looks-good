@@ -40,7 +40,6 @@ const dragPosReducer = (
         deltaY: action.finishY - state.startY,
       };
     case FINISH:
-      action.finish();
       return initialDragVector;
     default:
       return state;
@@ -73,8 +72,8 @@ export const useDrag = (): [number, number, DragDispatchObject] => {
     finish: (finishHandler: (e?: TouchEvent) => void): void => {
       dispatch({
         type: FINISH,
-        finish: finishHandler,
       });
+      finishHandler();
     },
   };
 
