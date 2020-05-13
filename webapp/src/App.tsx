@@ -77,8 +77,8 @@ const App = ({
       setDishInfo(randomDish);
     } else {
       // console.log("swipe left");
-      // const randomDish = getRandomDish(probDist);
-      // setDishInfo(randomDish);
+      const randomDish = getRandomDish(probDist);
+      setDishInfo(randomDish);
     }
   };
 

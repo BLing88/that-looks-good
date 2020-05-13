@@ -374,4 +374,64 @@ describe("App", () => {
     const after = JSON.parse(localStorage.getItem(storageKey)!);
     expect(after).toEqual(before);
   });
+
+  test("gets new image when swiping left", async () => {
+    const randomDatabaseDish1: DatabaseDish = buildTestDatabaseDish();
+    const randomDatabaseDish2: DatabaseDish = buildTestDatabaseDish();
+    const randomUnsplashDish1: UnsplashDish = buildTestUnsplashDish();
+    const randomUnsplashDish2: UnsplashDish = buildTestUnsplashDish();
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish1.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish1,
+          },
+        },
+      },
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish2.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish2,
+          },
+        },
+      },
+    ];
+
+    const memoizedGetRandomDish = () => {
+      let numCalls = 0;
+      return () => {
+        if (numCalls === 0) {
+          numCalls++;
+          return randomDatabaseDish1;
+        } else {
+          return randomDatabaseDish2;
+        }
+      };
+    };
+
+    const { getByAltText, getByText } = await MockLoadedApp(
+      mocks,
+      memoizedGetRandomDish()
+    );
+
+    swipeLeft(getByAltText, randomDatabaseDish1.name);
+    await waitFor(() => {
+      expect(getByText(/loading/i)).toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(getByAltText(randomDatabaseDish2.name)).toBeInTheDocument();
+    });
+  });
 });
