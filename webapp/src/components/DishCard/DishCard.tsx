@@ -39,13 +39,15 @@ const DishCard = ({
         alt={dish.name}
         src={
           dish.photo.url +
-          `&w=${Math.floor(0.85 * window.innerWidth)}&h=${Math.floor(
-            (3 * 0.85 * window.innerWidth) / 2
-          )}`
+          "&fit=crop&crop=entropy" +
+          `&w=${Math.min(
+            400,
+            Math.floor(0.85 * window.innerWidth)
+          )}&h=${Math.min(600, Math.floor((3 * 0.85 * window.innerWidth) / 2))}`
         }
         style={{
-          width: 0.85 * window.innerWidth,
-          height: (3 * 0.85 * window.innerWidth) / 2,
+          width: Math.min(400, Math.floor(0.85 * window.innerWidth)),
+          height: Math.min(600, Math.floor((3 * 0.85 * window.innerWidth) / 2)),
           position: "relative",
           transform: `translate(${deltaX}px, ${deltaY}px)`,
         }}
