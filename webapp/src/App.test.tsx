@@ -1,6 +1,6 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
-
+import { fireEvent } from "@testing-library/dom";
 import { MockedProvider } from "@apollo/react-testing";
 import { GET_DISH } from "./queries/queries";
 import { DocumentNode } from "graphql";
@@ -53,6 +53,68 @@ const MockLoadedApp = async (mocks: MockDishRequest[]) => {
 afterEach(() => {
   localStorage.removeItem("that-looks-good-swipe-counts");
 });
+
+const swipeRight = (
+  getByAltText: (
+    text: Matcher,
+    options?: MatcherOptions | undefined,
+    waitForElementOptions?: unknown
+  ) => HTMLElement,
+  targetAltText: string
+) => {
+  fireEvent.touchStart(getByAltText(targetAltText), {
+    touches: [
+      { clientX: window.innerWidth / 2, clientY: window.innerWidth / 2 },
+    ],
+  });
+  fireEvent.touchMove(getByAltText(targetAltText), {
+    touches: [
+      {
+        clientX: (3 * window.innerWidth) / 2 + 10,
+        clientY: window.innerWidth / 2,
+      },
+    ],
+  });
+  fireEvent.touchEnd(getByAltText(targetAltText), {
+    touches: [
+      {
+        clientX: (3 * window.innerWidth) / 2 + 10,
+        clientY: window.innerWidth / 2,
+      },
+    ],
+  });
+};
+
+const swipeLeft = (
+  getByAltText: (
+    text: Matcher,
+    options?: MatcherOptions | undefined,
+    waitForElementOptions?: unknown
+  ) => HTMLElement,
+  targetAltText: string
+) => {
+  fireEvent.touchStart(getByAltText(targetAltText), {
+    touches: [
+      { clientX: window.innerWidth / 2, clientY: window.innerWidth / 2 },
+    ],
+  });
+  fireEvent.touchMove(getByAltText(targetAltText), {
+    touches: [
+      {
+        clientX: window.innerWidth / 4 - 10,
+        clientY: window.innerWidth / 2,
+      },
+    ],
+  });
+  fireEvent.touchEnd(getByAltText(targetAltText), {
+    touches: [
+      {
+        clientX: window.innerWidth / 4 - 10,
+        clientY: window.innerWidth / 2,
+      },
+    ],
+  });
+};
 
 describe("App", () => {
   test("shows loading when successfully getting image on first load", async () => {
@@ -174,6 +236,7 @@ describe("App", () => {
         },
       },
     ];
-    await MockLoadedApp(mocks);
+    const { getByAltText } = await MockLoadedApp(mocks);
+    swipeRight(getByAltText, "test name");
   });
 });

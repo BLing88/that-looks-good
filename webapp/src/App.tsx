@@ -57,14 +57,16 @@ const App = ({
 
   const changeImageHandler = (direction: string): void => {
     if (direction === "forward") {
-      // update probDist
-      const randomDish = getRandomDish(probDist);
-      // update hashtable
-      setDishInfo(randomDish);
+      console.log("swipe right");
+      // // update probDist
+      // const randomDish = getRandomDish(probDist);
+      // // update hashtable
+      // setDishInfo(randomDish);
     } else {
-      // update probDist
-      const randomDish = getRandomDish(probDist);
-      setDishInfo(randomDish);
+      console.log("swipe left");
+      // // update probDist
+      // const randomDish = getRandomDish(probDist);
+      // setDishInfo(randomDish);
     }
   };
 
