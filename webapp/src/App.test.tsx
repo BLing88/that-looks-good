@@ -51,7 +51,7 @@ const MockLoadedApp = async (mocks: MockDishRequest[]) => {
 };
 
 afterEach(() => {
-  localStorage.removeItem("that-looks-good-probDist");
+  localStorage.removeItem("that-looks-good-swipe-counts");
 });
 
 describe("App", () => {
@@ -115,7 +115,7 @@ describe("App", () => {
     expect(queryByText("Unsplash")).not.toBeInTheDocument();
   });
 
-  test("sets initial probDist in localStorage if none found", async () => {
+  test("sets initial swipe counts in localStorage if none found", async () => {
     const mocks = [
       {
         request: {
@@ -141,10 +141,39 @@ describe("App", () => {
         },
       },
     ];
-    expect(localStorage.getItem("that-looks-good-probDist")).toBeNull();
+    expect(localStorage.getItem("that-looks-good-swipe-counts")).toBeNull();
     await MockLoadedApp(mocks);
-    expect(localStorage.getItem("that-looks-good-probDist")).toEqual(
-      "[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]"
+    expect(localStorage.getItem("that-looks-good-swipe-counts")).toEqual(
+      JSON.stringify({ counts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], totalSwipes: 0 })
     );
+  });
+
+  test("updates swipe counts when swipe right and total swipes < 100", async () => {
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: "testId",
+          },
+        },
+        result: {
+          data: {
+            getDish: {
+              dishId: "testId",
+              user: {
+                name: "test name",
+                username: "testusername",
+                htmlUrl: "testurl",
+              },
+              urls: {
+                raw: "raw-url",
+              },
+            },
+          },
+        },
+      },
+    ];
+    await MockLoadedApp(mocks);
   });
 });

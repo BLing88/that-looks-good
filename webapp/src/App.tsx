@@ -16,19 +16,33 @@ if (!hashTable.get(initial.id)) {
 }
 const initialDish = () => initial;
 
+const toProbDist = ({
+  counts,
+  totalSwipes,
+}: {
+  counts: number[];
+  totalSwipes: number;
+}) => {
+  if (totalSwipes < 100) {
+    return initialProbDist;
+  } else {
+    return counts.map((n: number) => n / totalSwipes);
+  }
+};
+
 const App = ({
   getRandomDish,
 }: {
   getRandomDish: (probDist: number[]) => DatabaseDish;
 }) => {
-  if (!localStorage.getItem("that-looks-good-probDist")) {
+  if (!localStorage.getItem("that-looks-good-swipe-counts")) {
     localStorage.setItem(
-      "that-looks-good-probDist",
-      "[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]"
+      "that-looks-good-swipe-counts",
+      JSON.stringify({ counts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], totalSwipes: 0 })
     );
   }
-  const probDist = JSON.parse(
-    localStorage.getItem("that-looks-good-probDist")!
+  const probDist = toProbDist(
+    JSON.parse(localStorage.getItem("that-looks-good-swipe-counts")!)
   );
   const [dishInfo, setDishInfo] = useState(initialDish);
   const [getDish, { loading, error, data }] = useLazyQuery(GET_DISH);
