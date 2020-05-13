@@ -1,3 +1,16 @@
+export enum Category {
+  Chinese = 0,
+  Mexican,
+  Japanese,
+  Korean,
+  Italian,
+  Pizza,
+  Thai,
+  Indian,
+  Vegetarian,
+  Misc,
+}
+
 interface Photo {
   id: string;
   url: string;

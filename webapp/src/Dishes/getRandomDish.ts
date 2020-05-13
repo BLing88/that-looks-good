@@ -11,19 +11,7 @@ import {
   Pizza,
 } from "./Dishes";
 
-import { DatabaseDish } from "../utility/Dish";
-enum Category {
-  Chinese = 0,
-  Mexican,
-  Japanese,
-  Korean,
-  Italian,
-  Pizza,
-  Thai,
-  Indian,
-  Vegetarian,
-  Misc,
-}
+import { DatabaseDish, Category } from "../utility/Dish";
 
 function cumulativeSums(a: number[]): number[] {
   return a.reduce(
