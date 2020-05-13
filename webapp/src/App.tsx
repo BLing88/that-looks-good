@@ -56,11 +56,11 @@ const App = ({
   }, [getDish, dishInfo.id]);
 
   const changeImageHandler = (direction: string): void => {
+    const old = JSON.parse(localStorage.getItem(storageKey)!);
+    const indexToUpdate = Category[dishInfo.category as keyof typeof Category];
     if (direction === "forward") {
       // console.log("swipe right");
       // update probDist
-      const old = JSON.parse(localStorage.getItem(storageKey)!);
-      const indexToUpdate = Category[dishInfo.category];
       localStorage.setItem(
         storageKey,
         JSON.stringify({
@@ -72,12 +72,11 @@ const App = ({
           totalSwipes: old.totalSwipes + 1,
         })
       );
-      // const randomDish = getRandomDish(probDist);
-      // // update hashtable
-      // setDishInfo(randomDish);
+      const randomDish = getRandomDish(probDist);
+      // update hashtable
+      setDishInfo(randomDish);
     } else {
-      console.log("swipe left");
-      // // update probDist
+      // console.log("swipe left");
       // const randomDish = getRandomDish(probDist);
       // setDishInfo(randomDish);
     }

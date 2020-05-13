@@ -270,4 +270,108 @@ describe("App", () => {
     );
     expect(after.totalSwipes).toEqual(before.totalSwipes + 1);
   });
+
+  test("gets new image when swiping right", async () => {
+    const randomDatabaseDish1: DatabaseDish = buildTestDatabaseDish();
+    const randomDatabaseDish2: DatabaseDish = buildTestDatabaseDish();
+    const randomUnsplashDish1: UnsplashDish = buildTestUnsplashDish();
+    const randomUnsplashDish2: UnsplashDish = buildTestUnsplashDish();
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish1.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish1,
+          },
+        },
+      },
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish2.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish2,
+          },
+        },
+      },
+    ];
+
+    const memoizedGetRandomDish = () => {
+      let numCalls = 0;
+      return () => {
+        if (numCalls === 0) {
+          numCalls++;
+          return randomDatabaseDish1;
+        } else {
+          return randomDatabaseDish2;
+        }
+      };
+    };
+
+    const { getByAltText, getByText } = await MockLoadedApp(
+      mocks,
+      memoizedGetRandomDish()
+    );
+
+    swipeRight(getByAltText, randomDatabaseDish1.name);
+    await waitFor(() => {
+      expect(getByText(/loading/i)).toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(getByAltText(randomDatabaseDish2.name)).toBeInTheDocument();
+    });
+  });
+
+  test("doesn't change swipe counts when swiping left", async () => {
+    const randomDatabaseDish: DatabaseDish = buildTestDatabaseDish();
+    const randomUnsplashDish: UnsplashDish = buildTestUnsplashDish();
+    const indexToUpdate =
+      Category[randomDatabaseDish.category as keyof typeof Category];
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish,
+          },
+        },
+      },
+    ];
+    const { getByAltText } = await MockLoadedApp(
+      mocks,
+      () => randomDatabaseDish
+    );
+
+    const testCounts = {
+      counts: [31, 20, 67, 43, 3, 29, 30, 47, 30, 19],
+      totalSwipes: 319,
+    };
+
+    localStorage.setItem(storageKey, JSON.stringify(testCounts));
+
+    const before = JSON.parse(localStorage.getItem(storageKey)!);
+    expect(before.counts[indexToUpdate]).toEqual(
+      testCounts.counts[indexToUpdate]
+    );
+    expect(before.totalSwipes).toEqual(testCounts.totalSwipes);
+
+    swipeLeft(getByAltText, randomDatabaseDish.name);
+
+    const after = JSON.parse(localStorage.getItem(storageKey)!);
+    expect(after).toEqual(before);
+  });
 });
