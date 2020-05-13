@@ -38,6 +38,22 @@ const MockedApp = ({ mocks }: { mocks: MockDishRequest[] }) => {
   );
 };
 
+const MockLoadedApp = async (mocks: MockDishRequest[]) => {
+  const queries = render(<MockedApp mocks={mocks} />);
+  await waitFor(() => {
+    expect(queries.getByText(/loading/i)).toBeInTheDocument();
+  });
+  expect(queries.queryByText(/error/i)).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(queries.queryByText(/loading/i)).not.toBeInTheDocument();
+  });
+  return queries;
+};
+
+afterEach(() => {
+  localStorage.removeItem("that-looks-good-probDist");
+});
+
 describe("App", () => {
   test("shows loading when successfully getting image on first load", async () => {
     const mocks = [
@@ -97,5 +113,38 @@ describe("App", () => {
       expect(getByText(/error/i)).toBeInTheDocument();
     });
     expect(queryByText("Unsplash")).not.toBeInTheDocument();
+  });
+
+  test("sets initial probDist in localStorage if none found", async () => {
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: "testId",
+          },
+        },
+        result: {
+          data: {
+            getDish: {
+              dishId: "testId",
+              user: {
+                name: "test name",
+                username: "testusername",
+                htmlUrl: "testurl",
+              },
+              urls: {
+                raw: "raw-url",
+              },
+            },
+          },
+        },
+      },
+    ];
+    expect(localStorage.getItem("that-looks-good-probDist")).toBeNull();
+    await MockLoadedApp(mocks);
+    expect(localStorage.getItem("that-looks-good-probDist")).toEqual(
+      "[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]"
+    );
   });
 });

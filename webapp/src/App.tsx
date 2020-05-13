@@ -21,8 +21,15 @@ const App = ({
 }: {
   getRandomDish: (probDist: number[]) => DatabaseDish;
 }) => {
-  // const probDist = localStorage.get('that-looks-good-probDist') ? localStorage.get('that-looks-good-probDist'): [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-  const probDist = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
+  if (!localStorage.getItem("that-looks-good-probDist")) {
+    localStorage.setItem(
+      "that-looks-good-probDist",
+      "[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]"
+    );
+  }
+  const probDist = JSON.parse(
+    localStorage.getItem("that-looks-good-probDist")!
+  );
   const [dishInfo, setDishInfo] = useState(initialDish);
   const [getDish, { loading, error, data }] = useLazyQuery(GET_DISH);
 
