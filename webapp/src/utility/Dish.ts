@@ -2,6 +2,7 @@ interface Photo {
   id: string;
   url: string;
   photographer: string;
+  username: string;
   photographerProfileURL: string;
 }
 

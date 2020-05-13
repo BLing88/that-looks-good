@@ -37,7 +37,12 @@ const DishCard = ({
           });
         }}
         alt={dish.name}
-        src={require(`../../assets/${dish.photo.url}`)}
+        src={
+          dish.photo.url +
+          `&w=${Math.floor(0.85 * window.innerWidth)}&h=${Math.floor(
+            (3 * 0.85 * window.innerWidth) / 2
+          )}`
+        }
         style={{
           width: 0.85 * window.innerWidth,
           height: (3 * 0.85 * window.innerWidth) / 2,
@@ -49,9 +54,7 @@ const DishCard = ({
       <div className="attribution">
         Photo by{" "}
         <a
-          href={
-            "https://unsplash.com/@anniespratt?utm_source=That Looks Good&utm_medium=referral"
-          }
+          href={`https://unsplash.com/@${dish.photo.username}?utm_source=That Looks Good&utm_medium=referral`}
         >
           {dish.photo.photographer}
         </a>{" "}
