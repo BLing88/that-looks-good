@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { DishCard } from "./components/DishCard";
 import { Header } from "./components/Header";
-import { Dish, DatabaseDish } from "./utility/Dish";
+import { Dish, DatabaseDish, Category } from "./utility/Dish";
 import { GET_DISH } from "./queries/queries";
 import { getRandomDish } from "./Dishes/getRandomDish";
 import { useLazyQuery } from "@apollo/react-hooks";
@@ -25,6 +25,8 @@ const toProbDist = ({
   }
 };
 
+const storageKey = "that-looks-good-swipe-counts";
+
 const App = ({
   getRandomDish,
 }: {
@@ -35,15 +37,13 @@ const App = ({
     hashTable.set(initial.id, true);
   }
   const initialDish = () => initial;
-  if (!localStorage.getItem("that-looks-good-swipe-counts")) {
+  if (!localStorage.getItem(storageKey)) {
     localStorage.setItem(
-      "that-looks-good-swipe-counts",
+      storageKey,
       JSON.stringify({ counts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], totalSwipes: 0 })
     );
   }
-  const probDist = toProbDist(
-    JSON.parse(localStorage.getItem("that-looks-good-swipe-counts")!)
-  );
+  const probDist = toProbDist(JSON.parse(localStorage.getItem(storageKey)!));
   const [dishInfo, setDishInfo] = useState(initialDish);
   const [getDish, { loading, error, data }] = useLazyQuery(GET_DISH);
 
@@ -57,8 +57,21 @@ const App = ({
 
   const changeImageHandler = (direction: string): void => {
     if (direction === "forward") {
-      console.log("swipe right");
+      // console.log("swipe right");
       // update probDist
+      const old = JSON.parse(localStorage.getItem(storageKey)!);
+      const indexToUpdate = Category[dishInfo.category];
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          counts: [
+            ...old.counts.slice(0, indexToUpdate),
+            old.counts[indexToUpdate] + 1,
+            ...old.counts.slice(indexToUpdate + 1),
+          ],
+          totalSwipes: old.totalSwipes + 1,
+        })
+      );
       // const randomDish = getRandomDish(probDist);
       // // update hashtable
       // setDishInfo(randomDish);

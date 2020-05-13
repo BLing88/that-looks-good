@@ -4,7 +4,7 @@ import { fireEvent } from "@testing-library/dom";
 import { MockedProvider } from "@apollo/react-testing";
 import { GET_DISH } from "./queries/queries";
 import { DocumentNode } from "graphql";
-import { UnsplashDish, DatabaseDish } from "./utility/Dish";
+import { UnsplashDish, DatabaseDish, Category } from "./utility/Dish";
 import {
   buildTestDatabaseDish,
   buildTestUnsplashDish,
@@ -33,6 +33,8 @@ jest.mock("./Dishes/getRandomDish", () => ({
 }));
 import { getRandomDish } from "./Dishes/getRandomDish";
 import App from "./App";
+
+const storageKey = "that-looks-good-swipe-counts";
 
 const MockedApp = ({
   mocks,
@@ -216,16 +218,18 @@ describe("App", () => {
         },
       },
     ];
-    expect(localStorage.getItem("that-looks-good-swipe-counts")).toBeNull();
+    expect(localStorage.getItem(storageKey)).toBeNull();
     await MockLoadedApp(mocks);
-    expect(localStorage.getItem("that-looks-good-swipe-counts")).toEqual(
+    expect(localStorage.getItem(storageKey)).toEqual(
       JSON.stringify({ counts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], totalSwipes: 0 })
     );
   });
 
-  test("updates swipe counts when swipe right and total swipes < 100", async () => {
+  test("updates swipe counts when swiping right", async () => {
     const randomDatabaseDish: DatabaseDish = buildTestDatabaseDish();
     const randomUnsplashDish: UnsplashDish = buildTestUnsplashDish();
+    const indexToUpdate =
+      Category[randomDatabaseDish.category as keyof typeof Category];
     const mocks = [
       {
         request: {
@@ -245,6 +249,25 @@ describe("App", () => {
       mocks,
       () => randomDatabaseDish
     );
+
+    const testCounts = {
+      counts: [1, 20, 0, 43, 3, 20, 30, 47, 30, 19],
+      totalSwipes: 213,
+    };
+
+    localStorage.setItem(storageKey, JSON.stringify(testCounts));
+
+    const before = JSON.parse(localStorage.getItem(storageKey)!);
+    expect(before.counts[indexToUpdate]).toEqual(
+      testCounts.counts[indexToUpdate]
+    );
+    expect(before.totalSwipes).toEqual(testCounts.totalSwipes);
     swipeRight(getByAltText, randomDatabaseDish.name);
+
+    const after = JSON.parse(localStorage.getItem(storageKey)!);
+    expect(after.counts[indexToUpdate]).toEqual(
+      before.counts[indexToUpdate] + 1
+    );
+    expect(after.totalSwipes).toEqual(before.totalSwipes + 1);
   });
 });
