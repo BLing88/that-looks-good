@@ -10,11 +10,6 @@ import { useLazyQuery } from "@apollo/react-hooks";
 const hashTable = new Map();
 
 const initialProbDist = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-const initial = getRandomDish(initialProbDist);
-if (!hashTable.get(initial.id)) {
-  hashTable.set(initial.id, true);
-}
-const initialDish = () => initial;
 
 const toProbDist = ({
   counts,
@@ -35,6 +30,11 @@ const App = ({
 }: {
   getRandomDish: (probDist: number[]) => DatabaseDish;
 }) => {
+  const initial = getRandomDish(initialProbDist);
+  if (!hashTable.get(initial.id)) {
+    hashTable.set(initial.id, true);
+  }
+  const initialDish = () => initial;
   if (!localStorage.getItem("that-looks-good-swipe-counts")) {
     localStorage.setItem(
       "that-looks-good-swipe-counts",
@@ -58,7 +58,7 @@ const App = ({
   const changeImageHandler = (direction: string): void => {
     if (direction === "forward") {
       console.log("swipe right");
-      // // update probDist
+      // update probDist
       // const randomDish = getRandomDish(probDist);
       // // update hashtable
       // setDishInfo(randomDish);

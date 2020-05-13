@@ -5,6 +5,10 @@ import { MockedProvider } from "@apollo/react-testing";
 import { GET_DISH } from "./queries/queries";
 import { DocumentNode } from "graphql";
 import { UnsplashDish, DatabaseDish } from "./utility/Dish";
+import {
+  buildTestDatabaseDish,
+  buildTestUnsplashDish,
+} from "./test/utility/randomDishes";
 
 interface MockDishRequest {
   request: {
@@ -30,16 +34,25 @@ jest.mock("./Dishes/getRandomDish", () => ({
 import { getRandomDish } from "./Dishes/getRandomDish";
 import App from "./App";
 
-const MockedApp = ({ mocks }: { mocks: MockDishRequest[] }) => {
+const MockedApp = ({
+  mocks,
+  getRandDish = getRandomDish,
+}: {
+  mocks: MockDishRequest[];
+  getRandDish?: (x?: any) => DatabaseDish;
+}) => {
   return (
     <MockedProvider mocks={mocks} addTypename={false}>
-      <App getRandomDish={getRandomDish} />
+      <App getRandomDish={getRandDish} />
     </MockedProvider>
   );
 };
 
-const MockLoadedApp = async (mocks: MockDishRequest[]) => {
-  const queries = render(<MockedApp mocks={mocks} />);
+const MockLoadedApp = async (
+  mocks: MockDishRequest[],
+  getRandDish: (x?: any) => DatabaseDish = getRandomDish
+) => {
+  const queries = render(<MockedApp mocks={mocks} getRandDish={getRandDish} />);
   await waitFor(() => {
     expect(queries.getByText(/loading/i)).toBeInTheDocument();
   });
@@ -211,32 +224,27 @@ describe("App", () => {
   });
 
   test("updates swipe counts when swipe right and total swipes < 100", async () => {
+    const randomDatabaseDish: DatabaseDish = buildTestDatabaseDish();
+    const randomUnsplashDish: UnsplashDish = buildTestUnsplashDish();
     const mocks = [
       {
         request: {
           query: GET_DISH,
           variables: {
-            dishId: "testId",
+            dishId: randomDatabaseDish.id,
           },
         },
         result: {
           data: {
-            getDish: {
-              dishId: "testId",
-              user: {
-                name: "test name",
-                username: "testusername",
-                htmlUrl: "testurl",
-              },
-              urls: {
-                raw: "raw-url",
-              },
-            },
+            getDish: randomUnsplashDish,
           },
         },
       },
     ];
-    const { getByAltText } = await MockLoadedApp(mocks);
-    swipeRight(getByAltText, "test name");
+    const { getByAltText } = await MockLoadedApp(
+      mocks,
+      () => randomDatabaseDish
+    );
+    swipeRight(getByAltText, randomDatabaseDish.name);
   });
 });
