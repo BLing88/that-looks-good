@@ -5,6 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { ApolloProvider } from "@apollo/react-hooks";
 import ApolloClient from "apollo-boost";
+import { getRandomDish } from "./Dishes/getRandomDish";
 
 const client = new ApolloClient({
   uri: "https://qp2t3zo3a8.execute-api.us-east-1.amazonaws.com/dev/graphql",
@@ -13,7 +14,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <App getRandomDish={getRandomDish} />
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
