@@ -10,6 +10,8 @@ import {
   VegetarianDishes,
   Pizza,
 } from "./Dishes";
+
+import { DatabaseDish } from "../utility/Dish";
 enum Category {
   Chinese = 0,
   Mexican,
@@ -21,12 +23,6 @@ enum Category {
   Indian,
   Vegetarian,
   Misc,
-}
-
-interface DatabaseDish {
-  name: string;
-  category: string;
-  id: string;
 }
 
 function cumulativeSums(a: number[]): number[] {

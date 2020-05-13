@@ -11,3 +11,21 @@ export interface Dish {
   category: string;
   photo: Photo;
 }
+
+export interface DatabaseDish {
+  name: string;
+  category: string;
+  id: string;
+}
+
+export interface UnsplashDish {
+  dishId: string;
+  user: {
+    name: string;
+    username: string;
+    htmlUrl: string;
+  };
+  urls: {
+    raw: string;
+  };
+}
