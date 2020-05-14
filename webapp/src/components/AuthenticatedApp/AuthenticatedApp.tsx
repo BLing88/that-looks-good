@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
-import { DishCard } from "./components/DishCard";
-import { Header } from "./components/Header";
-import { LikePage } from "./components/LikePage";
-import { Dish, DatabaseDish, Category } from "./utility/Dish";
-import { GET_DISH } from "./queries/queries";
+import "./AuthenticatedApp.css";
+import { DishCard } from "../DishCard";
+import { Header } from "../Header";
+import { LikePage } from "../LikePage";
+import { Dish, DatabaseDish, Category } from "../../utility/Dish";
+import { GET_DISH } from "../../queries/queries";
 import { useLazyQuery } from "@apollo/react-hooks";
 
 const hashTable = new Map();
@@ -27,7 +27,7 @@ const toProbDist = ({
 
 const storageKey = "that-looks-good-swipe-counts";
 
-const App = ({
+const AuthenticatedApp = ({
   getRandomDish,
 }: {
   getRandomDish: (probDist: number[]) => DatabaseDish;
@@ -141,4 +141,4 @@ const App = ({
   );
 };
 
-export default App;
+export { AuthenticatedApp };

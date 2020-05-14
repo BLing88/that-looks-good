@@ -3,13 +3,13 @@ import { render, waitFor } from "@testing-library/react";
 import { fireEvent } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { MockedProvider } from "@apollo/react-testing";
-import { GET_DISH } from "./queries/queries";
+import { GET_DISH } from "../../queries/queries";
 import { DocumentNode } from "graphql";
-import { UnsplashDish, DatabaseDish, Category } from "./utility/Dish";
+import { UnsplashDish, DatabaseDish, Category } from "../../utility/Dish";
 import {
   buildTestDatabaseDish,
   buildTestUnsplashDish,
-} from "./test/utility/randomDishes";
+} from "../../test/utility/randomDishes";
 
 interface MockDishRequest {
   request: {
@@ -25,15 +25,15 @@ interface MockDishRequest {
   };
 }
 
-jest.mock("./Dishes/getRandomDish", () => ({
+jest.mock("../../Dishes/getRandomDish", () => ({
   getRandomDish: jest.fn(() => ({
     id: "testId",
     name: "test name",
     category: "Chinese",
   })),
 }));
-import { getRandomDish } from "./Dishes/getRandomDish";
-import App from "./App";
+import { getRandomDish } from "../../Dishes/getRandomDish";
+import { AuthenticatedApp } from "./AuthenticatedApp";
 
 const storageKey = "that-looks-good-swipe-counts";
 
@@ -46,7 +46,7 @@ const MockedApp = ({
 }) => {
   return (
     <MockedProvider mocks={mocks} addTypename={false}>
-      <App getRandomDish={getRandDish} />
+      <AuthenticatedApp getRandomDish={getRandDish} />
     </MockedProvider>
   );
 };
