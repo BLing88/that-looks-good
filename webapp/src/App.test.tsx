@@ -529,8 +529,6 @@ describe("App", () => {
   test("prevent duplicates from being added to liked dishes", async () => {
     const randomDatabaseDish: DatabaseDish = buildTestDatabaseDish();
     const randomUnsplashDish: UnsplashDish = buildTestUnsplashDish();
-    const indexToUpdate =
-      Category[randomDatabaseDish.category as keyof typeof Category];
     const mocks = [
       {
         request: {
