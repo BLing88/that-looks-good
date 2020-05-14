@@ -1,6 +1,7 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { fireEvent } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
 import { MockedProvider } from "@apollo/react-testing";
 import { GET_DISH } from "./queries/queries";
 import { DocumentNode } from "graphql";
@@ -433,5 +434,95 @@ describe("App", () => {
     await waitFor(() => {
       expect(getByAltText(randomDatabaseDish2.name)).toBeInTheDocument();
     });
+  });
+
+  test("shows liked dishes for current session when you click on Liked button", async () => {
+    const randomDatabaseDish1: DatabaseDish = buildTestDatabaseDish();
+    const randomDatabaseDish2: DatabaseDish = buildTestDatabaseDish();
+    const randomDatabaseDish3: DatabaseDish = buildTestDatabaseDish();
+    const randomUnsplashDish1: UnsplashDish = buildTestUnsplashDish();
+    const randomUnsplashDish2: UnsplashDish = buildTestUnsplashDish();
+    const randomUnsplashDish3: UnsplashDish = buildTestUnsplashDish();
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish1.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish1,
+          },
+        },
+      },
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish2.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish2,
+          },
+        },
+      },
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish3.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish3,
+          },
+        },
+      },
+    ];
+
+    const memoizedGetRandomDish = () => {
+      let numCalls = 0;
+      return () => {
+        if (numCalls === 0) {
+          numCalls++;
+          return randomDatabaseDish1;
+        } else if (numCalls === 3) {
+          numCalls++;
+          return randomDatabaseDish2;
+        } else if (numCalls === 5) {
+          return randomDatabaseDish3;
+        } else {
+          numCalls++;
+          return buildTestDatabaseDish();
+        }
+      };
+    };
+
+    const { getByAltText, getByText, queryByText } = await MockLoadedApp(
+      mocks,
+      memoizedGetRandomDish()
+    );
+    expect(getByAltText(randomDatabaseDish1.name)).toBeInTheDocument();
+    swipeRight(getByAltText, randomDatabaseDish1.name);
+
+    await waitFor(() => {
+      expect(getByAltText(randomDatabaseDish2.name)).toBeInTheDocument();
+    });
+
+    swipeRight(getByAltText, randomDatabaseDish2.name);
+    await waitFor(() => {
+      expect(getByAltText(randomDatabaseDish3.name)).toBeInTheDocument();
+    });
+
+    userEvent.click(getByText(/liked/i));
+    expect(getByText(/You liked these dishes:/i)).toBeInTheDocument();
+    expect(getByText(randomDatabaseDish1.name)).toBeInTheDocument();
+    expect(getByText(randomDatabaseDish2.name)).toBeInTheDocument();
+    expect(queryByText(randomDatabaseDish3.name)).not.toBeInTheDocument();
   });
 });

@@ -1,11 +1,17 @@
 import React from "react";
 import "./Header.css";
 
-const Header = () => {
+const Header = ({ clickLikeHandler }: { clickLikeHandler: () => void }) => {
   return (
     <header className="app-header">
       <div>Profile</div>
-      <div>Liked</div>
+      <button
+        onClick={() => {
+          clickLikeHandler();
+        }}
+      >
+        Liked
+      </button>
     </header>
   );
 };

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { DishCard } from "./components/DishCard";
 import { Header } from "./components/Header";
+import { LikePage } from "./components/LikePage";
 import { Dish, DatabaseDish, Category } from "./utility/Dish";
 import { GET_DISH } from "./queries/queries";
 import { getRandomDish } from "./Dishes/getRandomDish";
 import { useLazyQuery } from "@apollo/react-hooks";
 
-const hashTable = new Map();
+// const hashTable = new Map();
 
 const initialProbDist = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
 
@@ -33,9 +34,9 @@ const App = ({
   getRandomDish: (probDist: number[]) => DatabaseDish;
 }) => {
   const initial = getRandomDish(initialProbDist);
-  if (!hashTable.get(initial.id)) {
-    hashTable.set(initial.id, true);
-  }
+  // if (!hashTable.get(initial.id)) {
+  //   hashTable.set(initial.id, true);
+  // }
   const initialDish = () => initial;
   if (!localStorage.getItem(storageKey)) {
     localStorage.setItem(
@@ -46,6 +47,9 @@ const App = ({
   const probDist = toProbDist(JSON.parse(localStorage.getItem(storageKey)!));
   const [dishInfo, setDishInfo] = useState(initialDish);
   const [getDish, { loading, error, data }] = useLazyQuery(GET_DISH);
+  const [showLiked, setShowLiked] = useState(false);
+  const [sessionSwipeCount, setSessionSwipeCount] = useState(0);
+  const [sessionLikedDishes, setSessionLikedDishes] = useState([] as Dish[]);
 
   useEffect(() => {
     getDish({
@@ -72,6 +76,20 @@ const App = ({
           totalSwipes: old.totalSwipes + 1,
         })
       );
+      setSessionLikedDishes((sessionLikedDishes) => [
+        ...sessionLikedDishes,
+        {
+          name: dishInfo.name,
+          category: dishInfo.category,
+          photo: {
+            id: data.getDish.dishId,
+            url: data.getDish.urls.raw,
+            username: data.getDish.user.username,
+            photographer: data.getDish.user.name,
+            photographerProfileURL: data.getDish.user.htmlUrl,
+          },
+        },
+      ]);
       const randomDish = getRandomDish(probDist);
       // update hashtable
       setDishInfo(randomDish);
@@ -84,10 +102,14 @@ const App = ({
 
   return (
     <div className="App">
-      <Header />
+      <Header
+        clickLikeHandler={() => {
+          setShowLiked((show) => !show);
+        }}
+      />
       {error && <div>There was an error loading.</div>}
       {loading && <div>Loading&hellip;</div>}
-      {data && (
+      {data && !showLiked && (
         <DishCard
           dish={{
             name: dishInfo.name,
@@ -103,6 +125,7 @@ const App = ({
           changeImageHandler={changeImageHandler}
         />
       )}
+      {showLiked && <LikePage likedDishes={sessionLikedDishes} />}
     </div>
   );
 };
