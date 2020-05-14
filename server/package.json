@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/preset-typescript": "^7.9.0",
+    "@types/aws-lambda": "^8.10.51",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.5",
     "@types/node-fetch": "^2.5.7",
@@ -23,10 +24,13 @@
   "dependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@types/jsonwebtoken": "^8.5.0",
     "apollo-server": "^2.13.1",
     "apollo-server-lambda": "^2.13.1",
     "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.8.0",
     "node-fetch": "^2.6.0",
     "unsplash-js": "^6.0.0"
   }
