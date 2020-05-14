@@ -12,9 +12,18 @@ const resolvers = {
   },
 };
 
+const createContext = ({ event }) => {
+  const accessToken = event.headers.Authorization || "";
+
+  return {
+    accessToken,
+  };
+};
+
 export const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: createContext,
   playground: { endpoint: "/dev/graphql" },
 });
 
