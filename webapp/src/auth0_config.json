@@ -1,5 +1,5 @@
 {
-    "domain": "that-looks-good.auth0.com",
-    "clientId": "nX4VPk5Mu35bVnMpgXEtzVXothd7dIGD",
-    "audience": "https://qp2t3zo3a8.execute-api.us-east-1.amazonaws.com/graphql"
+  "domain": "that-looks-good.auth0.com",
+  "clientId": "nX4VPk5Mu35bVnMpgXEtzVXothd7dIGD",
+  "audience": "https://qp2t3zo3a8.execute-api.us-east-1.amazonaws.com/graphql"
 }

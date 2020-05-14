@@ -15,6 +15,20 @@ export const App = () => {
     getTokenSilently,
   } = useAuth0()!;
 
+  if (isAuthenticated) {
+    const client = new ApolloClient({
+      uri: "https://qp2t3zo3a8.execute-api.us-east-1.amazonaws.com/dev/graphql",
+      request: async (operation) => {
+        const token = isAuthenticated ? await getTokenSilently() : null;
+
+        operation.setContext({
+          headers: {
+            authorization: token ? `Bearer ${token}` : undefined,
+          },
+        });
+      },
+    });
+
     return (
       <div>
         <ApolloProvider client={client}>

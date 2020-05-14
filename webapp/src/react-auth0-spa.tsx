@@ -22,7 +22,7 @@ interface Auth0Value {
   loginWithPopup(options: PopupLoginOptions): Promise<void>;
   handleRedirectCallback(): Promise<RedirectLoginResult>;
   getIdTokenClaims(p?: getIdTokenClaimsOptions): Promise<IdToken>;
-  loginWithRedirect(p: RedirectLoginOptions): Promise<void>;
+  loginWithRedirect(p?: RedirectLoginOptions): Promise<void>;
   getTokenSilently(p?: GetTokenSilentlyOptions): Promise<string | undefined>;
   getTokenWithPopup(p?: GetTokenWithPopupOptions): Promise<string | undefined>;
   logout(p?: LogoutOptions): void;
