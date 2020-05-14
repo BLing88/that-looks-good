@@ -7,7 +7,9 @@ export const LikePage = ({ likedDishes }: { likedDishes: Dish[] }) => {
       <p>You liked these dishes:</p>
       <ul className="liked-dishes-list">
         {likedDishes.map((dish) => (
-          <li key={dish.photo.id}>{dish.name}</li>
+          <li className="liked-dishes-item" key={dish.photo.id}>
+            {dish.name}
+          </li>
         ))}
       </ul>
     </main>
