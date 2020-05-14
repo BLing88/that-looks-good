@@ -3,18 +3,10 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { App } from "./components/App";
 import * as serviceWorker from "./serviceWorker";
-import { ApolloProvider } from "@apollo/react-hooks";
-import ApolloClient from "apollo-boost";
-
-const client = new ApolloClient({
-  uri: "https://qp2t3zo3a8.execute-api.us-east-1.amazonaws.com/dev/graphql",
-});
-
+import createAuth0Client from "@auth0/auth0-spa-js";
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
