@@ -119,7 +119,7 @@ const App = ({
         }}
       />
       {error && <div>There was an error loading.</div>}
-      {loading && <div>Loading&hellip;</div>}
+      {loading && !showLiked && <div>Loading&hellip;</div>}
       {data && !showLiked && (
         <DishCard
           dish={{
