@@ -5,10 +5,9 @@ import { Header } from "./components/Header";
 import { LikePage } from "./components/LikePage";
 import { Dish, DatabaseDish, Category } from "./utility/Dish";
 import { GET_DISH } from "./queries/queries";
-import { getRandomDish } from "./Dishes/getRandomDish";
 import { useLazyQuery } from "@apollo/react-hooks";
 
-// const hashTable = new Map();
+const hashTable = new Map();
 
 const initialProbDist = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
 
@@ -34,9 +33,6 @@ const App = ({
   getRandomDish: (probDist: number[]) => DatabaseDish;
 }) => {
   const initial = getRandomDish(initialProbDist);
-  // if (!hashTable.get(initial.id)) {
-  //   hashTable.set(initial.id, true);
-  // }
   const initialDish = () => initial;
   if (!localStorage.getItem(storageKey)) {
     localStorage.setItem(
@@ -48,7 +44,7 @@ const App = ({
   const [dishInfo, setDishInfo] = useState(initialDish);
   const [getDish, { loading, error, data }] = useLazyQuery(GET_DISH);
   const [showLiked, setShowLiked] = useState(false);
-  const [sessionSwipeCount, setSessionSwipeCount] = useState(0);
+  // const [sessionSwipeCount, setSessionSwipeCount] = useState(0);
   const [sessionLikedDishes, setSessionLikedDishes] = useState([] as Dish[]);
 
   useEffect(() => {
@@ -65,37 +61,52 @@ const App = ({
     if (direction === "forward") {
       // console.log("swipe right");
       // update probDist
-      localStorage.setItem(
-        storageKey,
-        JSON.stringify({
-          counts: [
-            ...old.counts.slice(0, indexToUpdate),
-            old.counts[indexToUpdate] + 1,
-            ...old.counts.slice(indexToUpdate + 1),
-          ],
-          totalSwipes: old.totalSwipes + 1,
-        })
-      );
-      setSessionLikedDishes((sessionLikedDishes) => [
-        ...sessionLikedDishes,
-        {
-          name: dishInfo.name,
-          category: dishInfo.category,
-          photo: {
-            id: data.getDish.dishId,
-            url: data.getDish.urls.raw,
-            username: data.getDish.user.username,
-            photographer: data.getDish.user.name,
-            photographerProfileURL: data.getDish.user.htmlUrl,
+      if (!hashTable.get(dishInfo.id)) {
+        // only update if dish haven't seen before
+        // in current session
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify({
+            counts: [
+              ...old.counts.slice(0, indexToUpdate),
+              old.counts[indexToUpdate] + 1,
+              ...old.counts.slice(indexToUpdate + 1),
+            ],
+            totalSwipes: old.totalSwipes + 1,
+          })
+        );
+        hashTable.set(dishInfo.id, true);
+        setSessionLikedDishes((sessionLikedDishes) => [
+          ...sessionLikedDishes,
+          {
+            name: dishInfo.name,
+            category: dishInfo.category,
+            photo: {
+              id: data.getDish.dishId,
+              url: data.getDish.urls.raw,
+              username: data.getDish.user.username,
+              photographer: data.getDish.user.name,
+              photographerProfileURL: data.getDish.user.htmlUrl,
+            },
           },
-        },
-      ]);
-      const randomDish = getRandomDish(probDist);
+        ]);
+      }
+
+      let randomDish = getRandomDish(probDist);
       // update hashtable
+      // while (hashTable.get(randomDish.id)) {
+      //   randomDish = getRandomDish(probDist);
+      // }
+      // hashTable.set(randomDish.id, true);
       setDishInfo(randomDish);
     } else {
       // console.log("swipe left");
-      const randomDish = getRandomDish(probDist);
+      let randomDish = getRandomDish(probDist);
+      // while (hashTable.get(randomDish.id)) {
+      //   randomDish = getRandomDish(probDist);
+      // }
+      // hashTable.set(randomDish.id, true);
+
       setDishInfo(randomDish);
     }
   };

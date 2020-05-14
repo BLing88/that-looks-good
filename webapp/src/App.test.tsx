@@ -525,4 +525,35 @@ describe("App", () => {
     expect(getByText(randomDatabaseDish2.name)).toBeInTheDocument();
     expect(queryByText(randomDatabaseDish3.name)).not.toBeInTheDocument();
   });
+
+  test("prevent duplicates from being added to liked dishes", async () => {
+    const randomDatabaseDish: DatabaseDish = buildTestDatabaseDish();
+    const randomUnsplashDish: UnsplashDish = buildTestUnsplashDish();
+    const indexToUpdate =
+      Category[randomDatabaseDish.category as keyof typeof Category];
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish,
+          },
+        },
+      },
+    ];
+    const { getByAltText, getByText, getAllByText } = await MockLoadedApp(
+      mocks,
+      () => randomDatabaseDish
+    );
+
+    swipeRight(getByAltText, randomDatabaseDish.name);
+    swipeRight(getByAltText, randomDatabaseDish.name);
+    userEvent.click(getByText(/liked/i));
+    expect(getAllByText(randomDatabaseDish.name)).toHaveLength(1);
+  });
 });
