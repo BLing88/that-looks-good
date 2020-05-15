@@ -18,11 +18,7 @@ const unAuthorizedUserServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: () => ({
-    event: {
-      headers: {
-        Authorization: `Bearer invalid.test.token.asdf`,
-      },
-    },
+    accessToken: `Bearer invalid.test.token`,
   }),
 });
 
