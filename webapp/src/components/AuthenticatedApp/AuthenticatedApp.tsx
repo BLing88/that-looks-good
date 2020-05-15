@@ -114,6 +114,7 @@ const AuthenticatedApp = ({
   };
 
   const resetHandler = () => {
+    hashTable.clear();
     setSessionLikedDishes([] as Dish[]);
   };
 
