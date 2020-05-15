@@ -15,7 +15,7 @@ const unsplash = new Unsplash({
   secret: `${process.env.SECRET}`,
 });
 
-interface Dish {
+interface UnsplashResponse {
   id: string;
   urls: {
     raw: string;
@@ -26,16 +26,29 @@ interface Dish {
     links: { html: string };
   };
 }
+interface UnsplashDish {
+  dishId: string;
+  user: {
+    name: string;
+    username: string;
+    htmlUrl: string;
+  };
+  urls: {
+    raw: string;
+  };
+}
 
 const getDish = async (
-  _: any,
+  _: undefined,
   { dishId }: { dishId: string },
   context: ServerContext
-) => {
+): Promise<UnsplashDish> => {
   const { isAuthorized } = await getAuthorization(context);
   if (isAuthorized) {
     try {
-      const dish: Dish = await unsplash.photos.getPhoto(dishId).then(toJson);
+      const dish: UnsplashResponse = await unsplash.photos
+        .getPhoto(dishId)
+        .then(toJson);
       return {
         dishId: dish.id,
         urls: {
