@@ -1,10 +1,10 @@
 import React from "react";
-import { App } from "./App";
 import { render, waitFor } from "@testing-library/react";
 
 jest.mock("../../react-auth0-spa");
 import { useAuth0 } from "../../react-auth0-spa";
 const mockUseAuth0 = useAuth0 as jest.MockedFunction<typeof useAuth0>;
+import { App } from "./App";
 
 const mockAuth0Value = {
   isAuthenticated: false,
@@ -32,10 +32,11 @@ describe("App", () => {
   });
 
   test("shows authenticated app to authenticated user", async () => {
-    mockUseAuth0.mockReturnValueOnce({
+    mockUseAuth0.mockReturnValue({
       ...mockAuth0Value,
       loading: false,
       isAuthenticated: true,
+      logout: jest.fn().mockName("mockLogout"),
     });
 
     const { getByText, queryByText } = render(<App />);
