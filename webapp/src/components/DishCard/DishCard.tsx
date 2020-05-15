@@ -53,7 +53,7 @@ const DishCard = ({
         }}
       />
       <figcaption>{dish.name}</figcaption>
-      <div className="attribution">
+      <footer className="attribution">
         Photo by{" "}
         <a
           href={`https://unsplash.com/@${dish.photo.username}?utm_source=That Looks Good&utm_medium=referral`}
@@ -64,7 +64,7 @@ const DishCard = ({
         <a href="https://unsplash.com/?utm_source=That Looks Good&utm_medium=referral">
           Unsplash
         </a>
-      </div>
+      </footer>
     </figure>
   );
 };
