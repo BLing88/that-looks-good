@@ -5,7 +5,7 @@ const client = jwksClient({
   jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
 });
 
-const getKey = (header, callback) => {
+const getKey: jwt.GetPublicKeyOrSecret = (header, callback) => {
   client.getSigningKey(header.kid, (err, key) => {
     const signingKey =
       (key as jwksClient.CertSigningKey).publicKey ||

@@ -1,7 +1,7 @@
 import Unsplash, { toJson } from "unsplash-js";
 import fetch from "node-fetch";
 import { getAuthorization } from "./getAuthorization";
-import { APIGatewayProxyEvent } from "aws-lambda";
+import { ServerContext } from "./getAuthorization";
 declare global {
   namespace NodeJS {
     interface Global {
@@ -10,7 +10,6 @@ declare global {
   }
 }
 global.fetch = fetch;
-// require("dotenv").config();
 const unsplash = new Unsplash({
   accessKey: `${process.env.API_KEY}`,
   secret: `${process.env.SECRET}`,
@@ -28,14 +27,10 @@ interface Dish {
   };
 }
 
-interface AWSLambdaContext {
-  event: APIGatewayProxyEvent;
-}
-
 const getDish = async (
   _: any,
   { dishId }: { dishId: string },
-  context: AWSLambdaContext
+  context: ServerContext
 ) => {
   const { isAuthorized } = await getAuthorization(context);
   if (isAuthorized) {

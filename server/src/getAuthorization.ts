@@ -1,6 +1,12 @@
 import { isTokenValid } from "./validate";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
-export const getAuthorization = async (context) => {
+export interface ServerContext {
+  event: APIGatewayProxyEvent;
+  accessToken: string;
+}
+
+export const getAuthorization = async (context: ServerContext) => {
   const { accessToken } = context;
   const { decoded, error } = (await isTokenValid(accessToken)) as any;
   let isAuthorized;
