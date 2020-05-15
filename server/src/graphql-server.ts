@@ -1,6 +1,7 @@
 import { ApolloServer, gql } from "apollo-server-lambda";
 import { getDish } from "./query-resolvers";
 import { typeDefsString } from "./typeDefs";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
 const typeDefs = gql`
   ${typeDefsString}
@@ -12,7 +13,7 @@ const resolvers = {
   },
 };
 
-const createContext = ({ event }) => {
+const createContext = ({ event }: { event: APIGatewayProxyEvent }) => {
   const accessToken = event.headers.Authorization || "";
 
   return {
