@@ -14,11 +14,23 @@ const getKey: jwt.GetPublicKeyOrSecret = (header, callback) => {
   });
 };
 
-export const isTokenValid = async (token: string) => {
+interface DecodedResponse {
+  decoded: object;
+}
+
+interface ErrorResponse {
+  error: jwt.VerifyErrors | string;
+}
+
+type IsTokenValidResponse = DecodedResponse | ErrorResponse;
+
+export const isTokenValid = async (
+  token: string
+): Promise<IsTokenValidResponse> => {
   if (token) {
     const bearerToken = token.split(" ");
 
-    const result = new Promise((resolve, reject) => {
+    const result = new Promise<IsTokenValidResponse>((resolve, reject) => {
       jwt.verify(
         bearerToken[1],
         getKey,
