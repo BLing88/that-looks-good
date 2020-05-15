@@ -15,7 +15,11 @@ const getKey: jwt.GetPublicKeyOrSecret = (header, callback) => {
 };
 
 interface DecodedResponse {
-  decoded: object;
+  decoded: {
+    exp: number;
+    iss: string;
+    aud: string[];
+  };
 }
 
 interface ErrorResponse {
@@ -23,6 +27,12 @@ interface ErrorResponse {
 }
 
 type IsTokenValidResponse = DecodedResponse | ErrorResponse;
+
+export const isDecodedResponse = (
+  res: IsTokenValidResponse
+): res is DecodedResponse => {
+  return (res as DecodedResponse).decoded !== undefined;
+};
 
 export const isTokenValid = async (
   token: string
@@ -44,7 +54,7 @@ export const isTokenValid = async (
             resolve({ error });
           }
           if (decoded) {
-            resolve({ decoded });
+            resolve({ decoded } as DecodedResponse);
           }
         }
       );
