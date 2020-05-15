@@ -113,13 +113,19 @@ const AuthenticatedApp = ({
     }
   };
 
+  const resetHandler = () => {
+    setSessionLikedDishes([] as Dish[]);
+  };
+
   return (
     <div className="App">
       <Header
-        clickLikeHandler={() => {
+        toggleLikeHandler={() => {
           setShowLiked((show) => !show);
         }}
         logout={logout}
+        reset={resetHandler}
+        showLiked={showLiked}
       />
       {error && <div>There was an error loading.</div>}
       {loading && !showLiked && <div>Loading&hellip;</div>}

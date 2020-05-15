@@ -155,6 +155,9 @@ const swipeLeft = (
   });
 };
 
+// Note that we need to pass in a mock implementation of getRandomDish
+// and getRandomDish is called once every time AuthenticatedApp is rendered
+
 describe("App", () => {
   test("shows loading when successfully getting image on first load", async () => {
     const mocks = [
@@ -508,7 +511,7 @@ describe("App", () => {
       },
     ];
 
-    const memoizedGetRandomDish = () => {
+    const mockGetRandomDish = () => {
       let numCalls = 0;
       return () => {
         if (numCalls === 0) {
@@ -528,7 +531,7 @@ describe("App", () => {
 
     const { getByAltText, getByText, queryByText } = await MockLoadedApp(
       mocks,
-      memoizedGetRandomDish()
+      mockGetRandomDish()
     );
     expect(getByAltText(randomDatabaseDish1.name)).toBeInTheDocument();
     swipeRight(getByAltText, randomDatabaseDish1.name);
@@ -576,5 +579,130 @@ describe("App", () => {
     swipeRight(getByAltText, randomDatabaseDish.name);
     userEvent.click(getByText(/liked/i));
     expect(getAllByText(randomDatabaseDish.name)).toHaveLength(1);
+  });
+
+  test("can reset current session", async () => {
+    const randomDatabaseDish1: DatabaseDish = buildTestDatabaseDish();
+    const randomDatabaseDish2: DatabaseDish = buildTestDatabaseDish();
+    const randomDatabaseDish3: DatabaseDish = buildTestDatabaseDish();
+    const randomUnsplashDish1: UnsplashDish = buildTestUnsplashDish();
+    const randomUnsplashDish2: UnsplashDish = buildTestUnsplashDish();
+    const randomUnsplashDish3: UnsplashDish = buildTestUnsplashDish();
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish1.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish1,
+          },
+        },
+      },
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish2.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish2,
+          },
+        },
+      },
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish3.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish3,
+          },
+        },
+      },
+    ];
+
+    const mockGetRandomDish = () => {
+      let numCalls = 0;
+      return () => {
+        if (numCalls === 0) {
+          numCalls++;
+          return randomDatabaseDish1;
+        } else if (numCalls === 3) {
+          numCalls++;
+          return randomDatabaseDish2;
+        } else if (numCalls === 5) {
+          return randomDatabaseDish3;
+        } else {
+          numCalls++;
+          return buildTestDatabaseDish();
+        }
+      };
+    };
+
+    const { getByAltText, getByText, queryByText } = await MockLoadedApp(
+      mocks,
+      mockGetRandomDish()
+    );
+    expect(getByAltText(randomDatabaseDish1.name)).toBeInTheDocument();
+    swipeRight(getByAltText, randomDatabaseDish1.name);
+
+    await waitFor(() => {
+      expect(getByAltText(randomDatabaseDish2.name)).toBeInTheDocument();
+    });
+
+    swipeRight(getByAltText, randomDatabaseDish2.name);
+    await waitFor(() => {
+      expect(getByAltText(randomDatabaseDish3.name)).toBeInTheDocument();
+    });
+
+    userEvent.click(getByText(/liked/i));
+    expect(getByText(/You liked these dishes:/i)).toBeInTheDocument();
+    expect(getByText(randomDatabaseDish1.name)).toBeInTheDocument();
+    expect(getByText(randomDatabaseDish2.name)).toBeInTheDocument();
+
+    userEvent.click(getByText(/reset/i));
+    expect(queryByText(randomDatabaseDish1.name)).not.toBeInTheDocument();
+    expect(queryByText(randomDatabaseDish2.name)).not.toBeInTheDocument();
+    expect(getByText(/you haven't liked any dishes yet/i)).toBeInTheDocument();
+  });
+
+  test("toggles Liked button when toggling DishCard or LikePage", async () => {
+    const randomDatabaseDish: DatabaseDish = buildTestDatabaseDish();
+    const randomUnsplashDish: UnsplashDish = buildTestUnsplashDish();
+    const mocks = [
+      {
+        request: {
+          query: GET_DISH,
+          variables: {
+            dishId: randomDatabaseDish.id,
+          },
+        },
+        result: {
+          data: {
+            getDish: randomUnsplashDish,
+          },
+        },
+      },
+    ];
+    const { getByText, queryByText } = await MockLoadedApp(
+      mocks,
+      () => randomDatabaseDish
+    );
+    const likeButton = getByText(/Liked/i);
+    expect(likeButton).toBeInTheDocument();
+    expect(queryByText(/^Dishes$/i)).not.toBeInTheDocument();
+    userEvent.click(likeButton);
+    const dishesButton = getByText(/^Dishes$/i);
+    expect(dishesButton).toBeInTheDocument();
+    expect(queryByText(/Liked/i)).not;
   });
 });

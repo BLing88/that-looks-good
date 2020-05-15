@@ -2,21 +2,26 @@ import React from "react";
 import "./Header.css";
 
 const Header = ({
-  clickLikeHandler,
+  toggleLikeHandler,
   logout,
+  reset,
+  showLiked,
 }: {
-  clickLikeHandler: () => void;
+  toggleLikeHandler: () => void;
   logout: () => void;
+  reset: () => void;
+  showLiked: boolean;
 }) => {
   return (
     <header className="app-header">
       <button onClick={logout}>Log out</button>
+      <button onClick={reset}>Reset</button>
       <button
         onClick={() => {
-          clickLikeHandler();
+          toggleLikeHandler();
         }}
       >
-        Liked
+        {showLiked ? "Dishes" : "Liked"}
       </button>
     </header>
   );
