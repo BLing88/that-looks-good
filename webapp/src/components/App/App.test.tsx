@@ -44,6 +44,9 @@ describe("App", () => {
     await waitFor(() => {
       expect(getByText("Liked")).toBeInTheDocument();
     });
-    expect(getByText(/loading/i)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getByText(/log out/i)).toBeInTheDocument();
+    });
   });
 });

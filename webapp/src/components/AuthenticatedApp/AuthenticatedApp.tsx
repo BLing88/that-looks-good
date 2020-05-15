@@ -6,6 +6,7 @@ import { LikePage } from "../LikePage";
 import { Dish, DatabaseDish, Category } from "../../utility/Dish";
 import { GET_DISH } from "../../queries/queries";
 import { useLazyQuery } from "@apollo/react-hooks";
+import { useAuth0 } from "../../react-auth0-spa";
 
 const hashTable = new Map();
 
@@ -46,6 +47,7 @@ const AuthenticatedApp = ({
   const [showLiked, setShowLiked] = useState(false);
   // const [sessionSwipeCount, setSessionSwipeCount] = useState(0);
   const [sessionLikedDishes, setSessionLikedDishes] = useState([] as Dish[]);
+  const { logout } = useAuth0()!;
 
   useEffect(() => {
     getDish({
@@ -117,6 +119,7 @@ const AuthenticatedApp = ({
         clickLikeHandler={() => {
           setShowLiked((show) => !show);
         }}
+        logout={logout}
       />
       {error && <div>There was an error loading.</div>}
       {loading && !showLiked && <div>Loading&hellip;</div>}
