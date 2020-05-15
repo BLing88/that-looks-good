@@ -1,8 +1,8 @@
+require("dotenv").config();
 import { createTestClient } from "apollo-server-testing";
 import { ApolloServer, gql } from "apollo-server-lambda";
 import { getDish } from "../query-resolvers";
 import { typeDefsString } from "../typeDefs";
-require("dotenv").config();
 
 const typeDefs = gql`
   ${typeDefsString}
@@ -30,18 +30,9 @@ const authorizedUserServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: () => ({
-    event: {
-      headers: {
-        Authorization: `Bearer ${process.env.VALID_TEST_TOKEN}`,
-      },
-    },
+    accessToken: `Bearer ${process.env.VALID_TEST_TOKEN}`,
   }),
 });
-
-// jest.mock("../query-resolvers");
-// import { getDish } from "../query-resolvers";
-// import { server } from "../graphql-server";
-// import { gql } from "apollo-server-lambda";
 
 const { query: unAuthorizedQuery } = createTestClient(unAuthorizedUserServer);
 const { query: authorizedQuery } = createTestClient(authorizedUserServer);
@@ -94,13 +85,13 @@ describe("server", () => {
     expect(res.data.getDish).toBeNull();
   });
 
-  // test("retrieves a dish from Unsplash for authorized user", async () => {
-  //   const res = await authorizedQuery({
-  //     query: GET_DISH,
-  //     variables: {
-  //       dishId: "3DZTercmEF4",
-  //     },
-  //   });
-  //   expect(res.data).toEqual(testResponse.data);
-  // });
+  test("retrieves a dish from Unsplash for authorized user", async () => {
+    const res = await authorizedQuery({
+      query: GET_DISH,
+      variables: {
+        dishId: "3DZTercmEF4",
+      },
+    });
+    expect(res.data).toEqual(testResponse.data);
+  });
 });
