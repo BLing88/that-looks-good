@@ -157,8 +157,9 @@ const swipeLeft = (
 
 // Note that we need to pass in a mock implementation of getRandomDish
 // and getRandomDish is called once every time AuthenticatedApp is rendered
+// so when getDish is called and returns and sets the data, it forces a rerender
 
-describe("App", () => {
+describe("AuthenticatedApp", () => {
   test("shows loading when successfully getting image on first load", async () => {
     const mocks = [
       {
@@ -697,12 +698,12 @@ describe("App", () => {
       mocks,
       () => randomDatabaseDish
     );
-    const likeButton = getByText(/Liked/i);
+    const likeButton = getByText(/^Liked$/i);
     expect(likeButton).toBeInTheDocument();
     expect(queryByText(/^Dishes$/i)).not.toBeInTheDocument();
     userEvent.click(likeButton);
     const dishesButton = getByText(/^Dishes$/i);
     expect(dishesButton).toBeInTheDocument();
-    expect(queryByText(/Liked/i)).not;
+    expect(queryByText(/^Liked$/i)).not.toBeInTheDocument();
   });
 });
