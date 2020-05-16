@@ -7,6 +7,7 @@ import { Dish, DatabaseDish, Category } from "../../utility/Dish";
 import { GET_DISH } from "../../queries/queries";
 import { useLazyQuery } from "@apollo/react-hooks";
 import { useAuth0 } from "../../react-auth0-spa";
+import { LoadingSpinner } from "../LoadingSpinner";
 
 const hashTable = new Map();
 
@@ -129,7 +130,7 @@ const AuthenticatedApp = ({
         showLiked={showLiked}
       />
       {error && <div>There was an error loading.</div>}
-      {loading && !showLiked && <div>Loading&hellip;</div>}
+      {loading && !showLiked && <LoadingSpinner width={30} height={30} />}
       {data && !showLiked && (
         <DishCard
           dish={{
