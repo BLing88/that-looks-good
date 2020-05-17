@@ -20,16 +20,20 @@ const transitionHandler = (
   setTransition: React.Dispatch<React.SetStateAction<VelocityVector>>
 ) => {
   const r = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-  const vx = (100 * deltaX) / r;
-  const vy = (100 * deltaY) / r;
+  const vx = (90 * deltaX) / r;
+  const vy = (90 * deltaY) / r;
   return () =>
     setTransition((oldTransition) => ({
       vx: oldTransition.vx + vx,
       vy: oldTransition.vy + vy,
     }));
 };
+const initialTransition: VelocityVector = {
+  vx: 0,
+  vy: 0,
+};
 
-const timeStep = 1000 / 40;
+const timeStep = 1000 / 60;
 const transitionDuration = 250;
 
 const DishCard = ({
@@ -41,10 +45,7 @@ const DishCard = ({
 }) => {
   const [deltaX, deltaY, dragDispatch] = useDrag();
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [transition, setTransition] = useState({
-    vx: 0,
-    vy: 0,
-  } as VelocityVector);
+  const [transition, setTransition] = useState(initialTransition);
 
   const loadingStyle: CSSProperties = {
     height: 1,
