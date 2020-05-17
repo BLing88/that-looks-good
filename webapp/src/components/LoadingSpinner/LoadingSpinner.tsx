@@ -8,5 +8,11 @@ export const LoadingSpinner = ({
   width: number;
   height: number;
 }) => {
-  return <div style={{ width, height }} className="loading-spinner"></div>;
+  return (
+    <div
+      data-testid="loading-spinner"
+      style={{ width, height }}
+      className="loading-spinner"
+    ></div>
+  );
 };

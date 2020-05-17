@@ -11,6 +11,8 @@ import {
   buildTestUnsplashDish,
 } from "../../test/utility/randomDishes";
 
+jest.useRealTimers();
+
 jest.mock("../../react-auth0-spa");
 import { useAuth0 } from "../../react-auth0-spa";
 const mockUseAuth0 = useAuth0 as jest.MockedFunction<typeof useAuth0>;
@@ -80,17 +82,18 @@ const MockLoadedApp = async (
 ) => {
   const queries = render(<MockedApp mocks={mocks} getRandDish={getRandDish} />);
   await waitFor(() => {
-    expect(queries.getByText(/loading/i)).toBeInTheDocument();
+    expect(queries.getByTestId("loading-spinner")).toBeInTheDocument();
   });
   expect(queries.queryByText(/error/i)).not.toBeInTheDocument();
-  await waitFor(() => {
-    expect(queries.queryByText(/loading/i)).not.toBeInTheDocument();
-  });
+  await waitFor(() =>
+    expect(queries.getByText("Unsplash")).toBeInTheDocument()
+  );
   return queries;
 };
 
 afterEach(() => {
   localStorage.removeItem("that-looks-good-swipe-counts");
+  jest.clearAllTimers();
 });
 
 const swipeRight = (
@@ -186,16 +189,18 @@ describe("AuthenticatedApp", () => {
         },
       },
     ];
-    const { queryByText, getByText } = render(<MockedApp mocks={mocks} />);
+    const { queryByText, getByText, getByTestId, queryByTestId } = render(
+      <MockedApp mocks={mocks} />
+    );
 
     await waitFor(() => {
-      expect(getByText(/loading/i)).toBeInTheDocument();
+      expect(getByTestId("loading-spinner")).toBeInTheDocument();
     });
     expect(queryByText(/error/i)).not.toBeInTheDocument();
-    await waitFor(() => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-    });
-    expect(getByText("Unsplash")).toBeInTheDocument();
+    // await waitFor(() => {
+    //   expect(queryByTestId("loading-spinner")).not.toBeInTheDocument();
+    // });
+    await waitFor(() => expect(getByText("Unsplash")).toBeInTheDocument());
   });
   test("shows error if error loading image", async () => {
     const mocks = [
@@ -291,12 +296,14 @@ describe("AuthenticatedApp", () => {
     );
     expect(before.totalSwipes).toEqual(testCounts.totalSwipes);
     swipeRight(getByAltText, randomDatabaseDish.name);
-
-    const after = JSON.parse(localStorage.getItem(storageKey)!);
-    expect(after.counts[indexToUpdate]).toEqual(
-      before.counts[indexToUpdate] + 1
+    await waitFor(() => {
+      expect(
+        JSON.parse(localStorage.getItem(storageKey)!).counts[indexToUpdate]
+      ).toEqual(before.counts[indexToUpdate] + 1);
+    });
+    expect(JSON.parse(localStorage.getItem(storageKey)!).totalSwipes).toEqual(
+      before.totalSwipes + 1
     );
-    expect(after.totalSwipes).toEqual(before.totalSwipes + 1);
   });
 
   test("gets new image when swiping right", async () => {
@@ -345,14 +352,14 @@ describe("AuthenticatedApp", () => {
       };
     };
 
-    const { getByAltText, getByText } = await MockLoadedApp(
+    const { getByAltText, getByTestId } = await MockLoadedApp(
       mocks,
       memoizedGetRandomDish()
     );
 
     swipeRight(getByAltText, randomDatabaseDish1.name);
     await waitFor(() => {
-      expect(getByText(/loading/i)).toBeInTheDocument();
+      expect(getByTestId("loading-spinner")).toBeInTheDocument();
     });
     await waitFor(() => {
       expect(getByAltText(randomDatabaseDish2.name)).toBeInTheDocument();
@@ -449,14 +456,14 @@ describe("AuthenticatedApp", () => {
       };
     };
 
-    const { getByAltText, getByText } = await MockLoadedApp(
+    const { getByAltText, getByTestId } = await MockLoadedApp(
       mocks,
       memoizedGetRandomDish()
     );
 
     swipeLeft(getByAltText, randomDatabaseDish1.name);
     await waitFor(() => {
-      expect(getByText(/loading/i)).toBeInTheDocument();
+      expect(getByTestId("loading-spinner")).toBeInTheDocument();
     });
     await waitFor(() => {
       expect(getByAltText(randomDatabaseDish2.name)).toBeInTheDocument();
@@ -518,10 +525,10 @@ describe("AuthenticatedApp", () => {
         if (numCalls === 0) {
           numCalls++;
           return randomDatabaseDish1;
-        } else if (numCalls === 3) {
+        } else if (numCalls === 4) {
           numCalls++;
           return randomDatabaseDish2;
-        } else if (numCalls === 5) {
+        } else if (numCalls === 6) {
           return randomDatabaseDish3;
         } else {
           numCalls++;
@@ -579,7 +586,9 @@ describe("AuthenticatedApp", () => {
     swipeRight(getByAltText, randomDatabaseDish.name);
     swipeRight(getByAltText, randomDatabaseDish.name);
     userEvent.click(getByText(/liked/i));
-    expect(getAllByText(randomDatabaseDish.name)).toHaveLength(1);
+    await waitFor(() =>
+      expect(getAllByText(randomDatabaseDish.name)).toHaveLength(1)
+    );
   });
 
   test("can reset current session", async () => {
@@ -637,10 +646,10 @@ describe("AuthenticatedApp", () => {
         if (numCalls === 0) {
           numCalls++;
           return randomDatabaseDish1;
-        } else if (numCalls === 3) {
+        } else if (numCalls === 4) {
           numCalls++;
           return randomDatabaseDish2;
-        } else if (numCalls === 5) {
+        } else if (numCalls === 6) {
           return randomDatabaseDish3;
         } else {
           numCalls++;
