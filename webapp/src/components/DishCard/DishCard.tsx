@@ -90,6 +90,7 @@ const DishCard = ({
                 dragDispatch.finish(() => {
                   changeImageHandler("forward");
                 });
+                setTransition(initialTransition);
               }, transitionDuration);
             } else if (deltaX < -window.innerWidth / 4) {
               const interval = setInterval(
@@ -101,6 +102,7 @@ const DishCard = ({
                 dragDispatch.finish(() => {
                   changeImageHandler("backward");
                 });
+                setTransition(initialTransition);
               }, transitionDuration);
             } else {
               dragDispatch.finish(() => {});

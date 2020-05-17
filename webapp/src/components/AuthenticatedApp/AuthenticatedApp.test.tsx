@@ -304,6 +304,9 @@ describe("AuthenticatedApp", () => {
     expect(JSON.parse(localStorage.getItem(storageKey)!).totalSwipes).toEqual(
       before.totalSwipes + 1
     );
+    await waitFor(() =>
+      expect(getByAltText(randomDatabaseDish.name)).toBeInTheDocument()
+    );
   });
 
   test("gets new image when swiping right", async () => {
@@ -408,6 +411,9 @@ describe("AuthenticatedApp", () => {
 
     const after = JSON.parse(localStorage.getItem(storageKey)!);
     expect(after).toEqual(before);
+    await waitFor(() =>
+      expect(getByAltText(randomDatabaseDish.name)).toBeInTheDocument()
+    );
   });
 
   test("gets new image when swiping left", async () => {
@@ -584,6 +590,10 @@ describe("AuthenticatedApp", () => {
     );
 
     swipeRight(getByAltText, randomDatabaseDish.name);
+    await waitFor(() =>
+      expect(getByAltText(randomDatabaseDish.name)).toBeInTheDocument()
+    );
+
     swipeRight(getByAltText, randomDatabaseDish.name);
     userEvent.click(getByText(/liked/i));
     await waitFor(() =>
