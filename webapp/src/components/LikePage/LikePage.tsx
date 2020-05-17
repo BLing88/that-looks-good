@@ -3,7 +3,7 @@ import { Dish } from "../../utility/Dish";
 
 export const LikePage = ({ likedDishes }: { likedDishes: Dish[] }) => {
   return (
-    <main className="like-page">
+    <div className="like-page">
       {likedDishes.length !== 0 ? (
         <>
           <p>You liked these dishes:</p>
@@ -18,6 +18,6 @@ export const LikePage = ({ likedDishes }: { likedDishes: Dish[] }) => {
       ) : (
         <p>You haven't liked any dishes yet</p>
       )}
-    </main>
+    </div>
   );
 };
