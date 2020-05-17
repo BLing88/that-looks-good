@@ -129,25 +129,20 @@ const AuthenticatedApp = ({
         reset={resetHandler}
         showLiked={showLiked}
       />
-      {error && <div>There was an error loading.</div>}
       {loading && !showLiked && <LoadingSpinner width={30} height={30} />}
-      {data && !showLiked && (
-        <DishCard
-          dish={{
-            name: dishInfo.name,
-            category: dishInfo.category,
-            photo: {
-              id: data.getDish.dishId,
-              url: data.getDish.urls.raw,
-              username: data.getDish.user.username,
-              photographer: data.getDish.user.name,
-              photographerProfileURL: data.getDish.user.htmlUrl,
-            },
-          }}
-          changeImageHandler={changeImageHandler}
-        />
-      )}
-      {showLiked && <LikePage likedDishes={sessionLikedDishes} />}
+        {loading && !data && !showLiked && (
+          <div
+            className="loading"
+            style={{
+              height: Math.min(
+                600,
+                Math.floor((3 * 0.85 * window.innerWidth) / 2)
+              ),
+            }}
+          >
+            <LoadingSpinner width={30} height={30} />
+          </div>
+        )}
     </div>
   );
 };
