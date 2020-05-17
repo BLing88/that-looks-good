@@ -9,6 +9,29 @@ interface DishCard {
   name: string;
 }
 
+interface VelocityVector {
+  vx: number;
+  vy: number;
+}
+
+const transitionHandler = (
+  deltaX: number,
+  deltaY: number,
+  setTransition: React.Dispatch<React.SetStateAction<VelocityVector>>
+) => {
+  const r = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  const vx = (100 * deltaX) / r;
+  const vy = (100 * deltaY) / r;
+  return () =>
+    setTransition((oldTransition) => ({
+      vx: oldTransition.vx + vx,
+      vy: oldTransition.vy + vy,
+    }));
+};
+
+const timeStep = 1000 / 40;
+const transitionDuration = 250;
+
 const DishCard = ({
   dish,
   changeImageHandler,
@@ -18,6 +41,10 @@ const DishCard = ({
 }) => {
   const [deltaX, deltaY, dragDispatch] = useDrag();
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [transition, setTransition] = useState({
+    vx: 0,
+    vy: 0,
+  } as VelocityVector);
 
   const loadingStyle: CSSProperties = {
     height: 1,
@@ -28,7 +55,9 @@ const DishCard = ({
     width: Math.min(400, Math.floor(0.85 * window.innerWidth)),
     height: Math.min(600, Math.floor((3 * 0.85 * window.innerWidth) / 2)),
     position: "relative",
-    transform: `translate(${deltaX}px, ${deltaY}px)`,
+    transform: `translate(${deltaX + transition.vx}px, ${
+      deltaY + transition.vy
+    }px)`,
   };
 
   return (
@@ -50,13 +79,31 @@ const DishCard = ({
             dragDispatch.moving(e);
           }}
           onTouchEnd={() => {
-            dragDispatch.finish(() => {
-              if (deltaX > window.innerWidth / 4) {
-                changeImageHandler("forward");
-              } else if (deltaX < -window.innerWidth / 4) {
-                changeImageHandler("backward");
-              }
-            });
+            if (deltaX > window.innerWidth / 4) {
+              const interval = setInterval(
+                transitionHandler(deltaX, deltaY, setTransition),
+                timeStep
+              );
+              setTimeout(() => {
+                clearInterval(interval);
+                dragDispatch.finish(() => {
+                  changeImageHandler("forward");
+                });
+              }, transitionDuration);
+            } else if (deltaX < -window.innerWidth / 4) {
+              const interval = setInterval(
+                transitionHandler(deltaX, deltaY, setTransition),
+                timeStep
+              );
+              setTimeout(() => {
+                clearInterval(interval);
+                dragDispatch.finish(() => {
+                  changeImageHandler("backward");
+                });
+              }, transitionDuration);
+            } else {
+              dragDispatch.finish(() => {});
+            }
           }}
           alt={dish.name}
           src={
