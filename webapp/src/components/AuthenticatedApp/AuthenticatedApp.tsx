@@ -46,7 +46,6 @@ const AuthenticatedApp = ({
   const [dishInfo, setDishInfo] = useState(initialDish);
   const [getDish, { loading, error, data }] = useLazyQuery(GET_DISH);
   const [showLiked, setShowLiked] = useState(false);
-  // const [sessionSwipeCount, setSessionSwipeCount] = useState(0);
   const [sessionLikedDishes, setSessionLikedDishes] = useState([] as Dish[]);
   const { logout } = useAuth0()!;
 
@@ -120,7 +119,7 @@ const AuthenticatedApp = ({
   };
 
   return (
-    <div className="App">
+    <div className="authenticated-app">
       <Header
         toggleLikeHandler={() => {
           setShowLiked((show) => !show);
@@ -129,7 +128,9 @@ const AuthenticatedApp = ({
         reset={resetHandler}
         showLiked={showLiked}
       />
-      {loading && !showLiked && <LoadingSpinner width={30} height={30} />}
+      <main className="main-content">
+        {error && <div>There was an error loading.</div>}
+
         {loading && !data && !showLiked && (
           <div
             className="loading"
@@ -143,6 +144,25 @@ const AuthenticatedApp = ({
             <LoadingSpinner width={30} height={30} />
           </div>
         )}
+
+        {data && !showLiked && (
+          <DishCard
+            dish={{
+              name: dishInfo.name,
+              category: dishInfo.category,
+              photo: {
+                id: data.getDish.dishId,
+                url: data.getDish.urls.raw,
+                username: data.getDish.user.username,
+                photographer: data.getDish.user.name,
+                photographerProfileURL: data.getDish.user.htmlUrl,
+              },
+            }}
+            changeImageHandler={changeImageHandler}
+          />
+        )}
+        {showLiked && <LikePage likedDishes={sessionLikedDishes} />}
+      </main>
     </div>
   );
 };
