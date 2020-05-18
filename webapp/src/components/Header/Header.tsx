@@ -14,7 +14,14 @@ const Header = ({
 }) => {
   return (
     <header className="app-header">
-      <button onClick={logout}>Log out</button>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          logout();
+        }}
+      >
+        Log out
+      </button>
       <button onClick={reset}>Reset</button>
       <button
         onClick={() => {
