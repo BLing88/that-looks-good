@@ -10,7 +10,7 @@ import { useAuth0 } from "../../react-auth0-spa";
 import { LoadingSpinner } from "../LoadingSpinner";
 import { UndoReset } from "../UndoReset";
 
-const hashTable = new Map();
+let hashTable = new Map();
 
 const initialProbDist = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
 
@@ -52,6 +52,7 @@ const AuthenticatedApp = ({
   const [showUndo, setShowUndo] = useState({
     show: false,
     prevLikedDishes: [] as Dish[],
+    hashTable: hashTable,
   });
 
   useEffect(() => {
@@ -120,19 +121,24 @@ const AuthenticatedApp = ({
 
   const resetHandler = () => {
     if (sessionLikedDishes.length > 0) {
-      setShowUndo({ show: true, prevLikedDishes: sessionLikedDishes });
+      setShowUndo({
+        show: true,
+        prevLikedDishes: sessionLikedDishes,
+        hashTable: new Map(hashTable),
+      });
+      hashTable.clear();
+      setSessionLikedDishes([] as Dish[]);
     }
-    hashTable.clear();
-    setSessionLikedDishes([] as Dish[]);
   };
 
   const undoResetHandler = () => {
     setSessionLikedDishes(showUndo.prevLikedDishes);
-    setShowUndo({ show: false, prevLikedDishes: [] });
+    hashTable = showUndo.hashTable;
+    setShowUndo({ show: false, prevLikedDishes: [], hashTable: hashTable });
   };
 
   const closeHandler = () => {
-    setShowUndo({ show: false, prevLikedDishes: [] });
+    setShowUndo({ show: false, prevLikedDishes: [], hashTable: hashTable });
   };
 
   return (
