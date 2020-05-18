@@ -22,7 +22,7 @@ const Header = ({
       >
         Log out
       </button>
-      <button onClick={reset}>Reset</button>
+      {showLiked ? <button onClick={reset}>Reset</button> : null}
       <button
         onClick={() => {
           toggleLikeHandler();
