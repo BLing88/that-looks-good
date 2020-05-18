@@ -62,84 +62,95 @@ const DishCard = ({
   };
 
   return (
-    <figure className="dishcard">
-      <div
-        className="image"
-        style={{
-          width: Math.min(400, Math.floor(0.85 * window.innerWidth)),
-          height: Math.min(600, Math.floor((3 * 0.85 * window.innerWidth) / 2)),
-        }}
-      >
-        {imgLoaded ? null : <LoadingSpinner width={30} height={30} />}
-        <img
-          onTouchStart={(e) => {
-            e.stopPropagation();
-            dragDispatch.start(e);
-          }}
-          onTouchMove={(e) => {
-            dragDispatch.moving(e);
-          }}
-          onTouchEnd={() => {
-            if (deltaX > window.innerWidth / 4) {
-              const interval = setInterval(
-                transitionHandler(deltaX, deltaY, setTransition),
-                timeStep
-              );
-              setTimeout(() => {
-                clearInterval(interval);
-                dragDispatch.finish(() => {
-                  changeImageHandler("forward");
-                });
-                setTransition(initialTransition);
-              }, transitionDuration);
-            } else if (deltaX < -window.innerWidth / 4) {
-              const interval = setInterval(
-                transitionHandler(deltaX, deltaY, setTransition),
-                timeStep
-              );
-              setTimeout(() => {
-                clearInterval(interval);
-                dragDispatch.finish(() => {
-                  changeImageHandler("backward");
-                });
-                setTransition(initialTransition);
-              }, transitionDuration);
-            } else {
-              dragDispatch.finish(() => {});
-            }
-          }}
-          alt={dish.name}
-          src={
-            dish.photo.url +
-            "&fit=crop&crop=entropy" +
-            `&w=${Math.min(
-              400,
-              Math.floor(0.85 * window.innerWidth)
-            )}&h=${Math.min(
+    <article>
+      <figure className="dishcard">
+        <div
+          className="image-container"
+          style={{
+            width: Math.min(400, Math.floor(0.85 * window.innerWidth)),
+            height: Math.min(
               600,
               Math.floor((3 * 0.85 * window.innerWidth) / 2)
-            )}`
-          }
-          style={imgLoaded ? loadedStyle : loadingStyle}
-          onLoad={() => {
-            setImgLoaded(true);
+            ),
           }}
-        />
-      </div>
-      <figcaption>{dish.name}</figcaption>
+        >
+          {imgLoaded ? null : <LoadingSpinner width={30} height={30} />}
+          <img
+            onTouchStart={(e) => {
+              e.stopPropagation();
+              dragDispatch.start(e);
+            }}
+            onTouchMove={(e) => {
+              dragDispatch.moving(e);
+            }}
+            onTouchEnd={() => {
+              if (deltaX > window.innerWidth / 4) {
+                const interval = setInterval(
+                  transitionHandler(deltaX, deltaY, setTransition),
+                  timeStep
+                );
+                setTimeout(() => {
+                  clearInterval(interval);
+                  dragDispatch.finish(() => {
+                    changeImageHandler("forward");
+                  });
+                  setTransition(initialTransition);
+                }, transitionDuration);
+              } else if (deltaX < -window.innerWidth / 4) {
+                const interval = setInterval(
+                  transitionHandler(deltaX, deltaY, setTransition),
+                  timeStep
+                );
+                setTimeout(() => {
+                  clearInterval(interval);
+                  dragDispatch.finish(() => {
+                    changeImageHandler("backward");
+                  });
+                  setTransition(initialTransition);
+                }, transitionDuration);
+              } else {
+                dragDispatch.finish(() => {});
+              }
+            }}
+            alt={dish.name}
+            src={
+              dish.photo.url +
+              "&fit=crop&crop=entropy" +
+              `&w=${Math.min(
+                400,
+                Math.floor(0.85 * window.innerWidth)
+              )}&h=${Math.min(
+                600,
+                Math.floor((3 * 0.85 * window.innerWidth) / 2)
+              )}`
+            }
+            style={imgLoaded ? loadedStyle : loadingStyle}
+            onLoad={() => {
+              setImgLoaded(true);
+            }}
+          />
+        </div>
+        <figcaption className="dish-name">{dish.name}</figcaption>
+      </figure>
       <footer className="attribution">
         Photo by{" "}
         <a
           href={`https://unsplash.com/@${dish.photo.username}?utm_source=That Looks Good&utm_medium=referral`}
+          target="_blank"
+          rel="noreferrer noopener"
         >
           {dish.photo.photographer}
         </a>{" "}
         on{" "}
-        <a href="https://unsplash.com/?utm_source=That Looks Good&utm_medium=referral">
+        <a
+          href="https://unsplash.com/?utm_source=That Looks Good&utm_medium=referral"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           Unsplash
         </a>
       </footer>
-    </figure>
+    </article>
   );
 };
 
