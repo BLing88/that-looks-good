@@ -6,7 +6,7 @@ import {
   ItalianDishes,
   MiscDishes,
   MexicanDishes,
-  ThaiDishes,
+  SoutheastAsianDishes,
   VegetarianDishes,
   Pizza,
 } from "./Dishes";
@@ -63,8 +63,8 @@ function getRandomDish(probDist: number[]): DatabaseDish {
       return getRandomDishFrom(JapaneseDishes);
     case "Italian":
       return getRandomDishFrom(ItalianDishes);
-    case "Thai":
-      return getRandomDishFrom(ThaiDishes);
+    case "Southeast asian":
+      return getRandomDishFrom(SoutheastAsianDishes);
     case "Mexican":
       return getRandomDishFrom(MexicanDishes);
     case "Pizza":

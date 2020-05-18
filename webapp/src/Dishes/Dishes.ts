@@ -7,4 +7,4 @@ export { VegetarianDishes } from "./VegetarianDishes";
 export { ItalianDishes } from "./ItalianDishes";
 export { MiscDishes } from "./MiscDishes";
 export { MexicanDishes } from "./MexicanDishes";
-export { ThaiDishes } from "./ThaiDishes";
+export { SoutheastAsianDishes } from "./SoutheastAsianDishes";
