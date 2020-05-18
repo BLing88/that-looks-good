@@ -5,4 +5,5 @@
   justify-content: space-around;
   border-bottom: 1px solid rgba(1, 1, 1, 0.2);
   margin-bottom: 0.25em;
+  background-color: rgb(var(--primary-color));
 }
