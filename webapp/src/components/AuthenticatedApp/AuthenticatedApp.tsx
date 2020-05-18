@@ -8,6 +8,7 @@ import { GET_DISH } from "../../queries/queries";
 import { useLazyQuery } from "@apollo/react-hooks";
 import { useAuth0 } from "../../react-auth0-spa";
 import { LoadingSpinner } from "../LoadingSpinner";
+import { UndoReset } from "../UndoReset";
 
 const hashTable = new Map();
 
@@ -48,6 +49,10 @@ const AuthenticatedApp = ({
   const [showLiked, setShowLiked] = useState(false);
   const [sessionLikedDishes, setSessionLikedDishes] = useState([] as Dish[]);
   const { logout } = useAuth0()!;
+  const [showUndo, setShowUndo] = useState({
+    show: false,
+    prevLikedDishes: [] as Dish[],
+  });
 
   useEffect(() => {
     getDish({
@@ -114,8 +119,20 @@ const AuthenticatedApp = ({
   };
 
   const resetHandler = () => {
+    if (sessionLikedDishes.length > 0) {
+      setShowUndo({ show: true, prevLikedDishes: sessionLikedDishes });
+    }
     hashTable.clear();
     setSessionLikedDishes([] as Dish[]);
+  };
+
+  const undoResetHandler = () => {
+    setSessionLikedDishes(showUndo.prevLikedDishes);
+    setShowUndo({ show: false, prevLikedDishes: [] });
+  };
+
+  const closeHandler = () => {
+    setShowUndo({ show: false, prevLikedDishes: [] });
   };
 
   return (
@@ -129,6 +146,13 @@ const AuthenticatedApp = ({
         showLiked={showLiked}
       />
       <main className="main-content">
+        {showUndo.show && showLiked && (
+          <UndoReset
+            undoResetHandler={undoResetHandler}
+            closeHandler={closeHandler}
+            className={"undo-reset"}
+          />
+        )}
         {error && <div>There was an error loading.</div>}
 
         {loading && !data && !showLiked && (
@@ -161,6 +185,7 @@ const AuthenticatedApp = ({
             changeImageHandler={changeImageHandler}
           />
         )}
+
         {showLiked && <LikePage likedDishes={sessionLikedDishes} />}
       </main>
     </div>

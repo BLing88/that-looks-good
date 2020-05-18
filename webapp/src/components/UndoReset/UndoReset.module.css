@@ -1,0 +1,25 @@
+.undoModal {
+  background-color: rgba(var(--primary-color), 0.5);
+  /* border: solid 1px var(--background-color); */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  margin: 0 1em 0.25em 1em;
+}
+
+.message {
+  margin: 0 0 0 0.5em;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.undoBtn {
+  cursor: pointer;
+}
