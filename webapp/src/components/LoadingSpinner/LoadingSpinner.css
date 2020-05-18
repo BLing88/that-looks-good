@@ -1,6 +1,6 @@
 .loading-spinner {
   border: solid 3px;
-  border-color: black transparent transparent transparent;
+  border-color: var(--primary-color) transparent transparent transparent;
   border-radius: 50%;
   animation: 1s rotate linear infinite;
 }
