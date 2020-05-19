@@ -61,6 +61,34 @@ const DishCard = ({
     }px)`,
   };
 
+  const swipe = (
+    direction: "forward" | "backward",
+    startX: number,
+    startY: number
+  ) => {
+    const interval = setInterval(
+      transitionHandler(startX, startY, setTransition),
+      timeStep
+    );
+    setTimeout(() => {
+      clearInterval(interval);
+      dragDispatch.finish(() => {
+        changeImageHandler(direction);
+      });
+      setTransition(initialTransition);
+    }, transitionDuration);
+  };
+
+  const swipeHandler = () => {
+    if (deltaX > window.innerWidth / 4) {
+      swipe("forward", deltaX, deltaY);
+    } else if (deltaX < -window.innerWidth / 4) {
+      swipe("backward", deltaX, deltaY);
+    } else {
+      dragDispatch.finish(() => {});
+    }
+  };
+
   return (
     <article>
       <figure className="dishcard">
@@ -83,35 +111,7 @@ const DishCard = ({
             onTouchMove={(e) => {
               dragDispatch.moving(e);
             }}
-            onTouchEnd={() => {
-              if (deltaX > window.innerWidth / 4) {
-                const interval = setInterval(
-                  transitionHandler(deltaX, deltaY, setTransition),
-                  timeStep
-                );
-                setTimeout(() => {
-                  clearInterval(interval);
-                  dragDispatch.finish(() => {
-                    changeImageHandler("forward");
-                  });
-                  setTransition(initialTransition);
-                }, transitionDuration);
-              } else if (deltaX < -window.innerWidth / 4) {
-                const interval = setInterval(
-                  transitionHandler(deltaX, deltaY, setTransition),
-                  timeStep
-                );
-                setTimeout(() => {
-                  clearInterval(interval);
-                  dragDispatch.finish(() => {
-                    changeImageHandler("backward");
-                  });
-                  setTransition(initialTransition);
-                }, transitionDuration);
-              } else {
-                dragDispatch.finish(() => {});
-              }
-            }}
+            onTouchEnd={swipeHandler}
             alt={dish.name}
             src={
               dish.photo.url +
@@ -130,8 +130,31 @@ const DishCard = ({
             }}
           />
         </div>
+        <div className="swipe-btns">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              swipe("backward", -5, 0);
+            }}
+            className="swipe-btn"
+            aria-label="swipe left"
+          >
+            &larr;
+          </button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              swipe("forward", 5, 0);
+            }}
+            className="swipe-btn"
+            aria-label="swipe right"
+          >
+            &rarr;
+          </button>
+        </div>
         <figcaption className="dish-name">{dish.name}</figcaption>
       </figure>
+
       <footer className="attribution">
         Photo by{" "}
         <a

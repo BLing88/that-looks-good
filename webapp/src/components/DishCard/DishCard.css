@@ -1,12 +1,11 @@
 figure {
   width: 100%;
-  /* border: solid 1px black; */
   margin: 0;
 }
 
-figcaption {
-  margin-top: 1em;
-  font-size: 1.35em;
+.dish-name {
+  margin-top: 0.5em;
+  font-size: 1.5em;
 }
 
 img {
@@ -17,10 +16,36 @@ img {
   font-size: 0.65em;
 }
 
-.image {
+.image-container {
   margin: 0 auto;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+}
+
+.swipe-btns {
+  margin-top: 0.75em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.swipe-btn {
+  background: none;
+  background-color: rgb(var(--primary-color));
+  color: rgb(var(--background-color));
+  border-radius: 50%;
+  padding: 0;
+  width: 1.75em;
+  height: 1.75em;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.attribution a,
+a:visited {
+  color: rgb(var(--primary-color));
 }
