@@ -1,0 +1,31 @@
+.like-page,
+.no-likes-page {
+  text-align: left;
+  padding: 0 1em;
+}
+
+.like-page {
+  margin-top: 2em;
+}
+
+.like-page p {
+  margin: 0;
+}
+
+.like-page li {
+  list-style: none;
+  line-height: 1.35em;
+}
+
+.like-page li:not(:last-child) {
+  margin-bottom: 0.35em;
+}
+
+.no-likes-page {
+  display: flex;
+  margin-top: 5em;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15em;
+}
