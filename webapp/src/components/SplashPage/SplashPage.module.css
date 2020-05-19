@@ -1,5 +1,5 @@
 .splashPage {
-  background-color: var(--primary-color);
+  background-color: rgb(var(--primary-color));
   height: 100vh;
   display: flex;
   flex-direction: column;
