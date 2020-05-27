@@ -33,8 +33,9 @@ const initialTransition: VelocityVector = {
   vy: 0,
 };
 
-const timeStep = 1000 / 60;
-const transitionDuration = 250;
+const timeStep = 1000 / 60; // in milliseconds
+const transitionDuration = 250; // in milliseconds
+const maxAngle = 30; // max rotation angle in degrees
 
 const DishCard = ({
   dish,
@@ -56,9 +57,11 @@ const DishCard = ({
     width: Math.min(400, Math.floor(0.85 * window.innerWidth)),
     height: Math.min(600, Math.floor((3 * 0.85 * window.innerWidth) / 2)),
     position: "relative",
-    transform: `translate(${deltaX + transition.vx}px, ${
-      deltaY + transition.vy
-    }px)`,
+    transform: `
+    translate(${deltaX + transition.vx}px, ${deltaY + transition.vy}px) 
+    rotate(${
+      maxAngle * Math.tanh((deltaX + transition.vx) / (window.innerWidth / 2))
+    }deg)`,
   };
 
   const swipe = (
