@@ -1,9 +1,17 @@
+@font-face {
+  font-family: "FiraGO";
+  src: url("./FiraGO/FiraGO-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+}
+
 body {
   --background-color: 249, 244, 233;
   --primary-color: 219, 80, 53;
   margin: 0;
   padding: 0;
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: "FiraGO", Charter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -13,7 +21,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -21,4 +29,8 @@ code {
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+button {
+  font: inherit;
 }
