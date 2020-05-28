@@ -14,7 +14,6 @@
 }
 
 .title {
-  /* font-size: 1.75em; */
   text-align: center;
   margin-top: 0;
   grid-area: title;
@@ -29,4 +28,20 @@
   box-shadow: 0 0 3px grey;
   grid-area: login;
   border-radius: 3px;
+}
+
+.photos {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.attribution {
+  font-size: 0.65em;
+}
+
+.attribution a {
+  color: rgb(var(--background-color));
 }
