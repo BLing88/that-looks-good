@@ -16,7 +16,7 @@ export const LikePage = ({ likedDishes }: { likedDishes: Dish[] }) => {
     </article>
   ) : (
     <article className="no-likes-page">
-      <p>You haven't liked any dishes yet&hellip;</p>
+      <p>You haven&rsquo;t liked any dishes yet&hellip;</p>
     </article>
   );
 };
