@@ -24,7 +24,9 @@ ReactDOM.render(
       redirect_uri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
     >
-      <App />
+      <div className="wrapper">
+        <App />
+      </div>
     </Auth0Provider>
   </React.StrictMode>,
   document.getElementById("root")

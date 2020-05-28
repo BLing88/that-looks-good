@@ -133,28 +133,26 @@ const DishCard = ({
             }}
           />
         </div>
-        <div className="swipe-btns">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              swipe("backward", -5, 0);
-            }}
-            className="swipe-btn"
-            aria-label="swipe left"
-          >
-            &larr;
-          </button>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              swipe("forward", 5, 0);
-            }}
-            className="swipe-btn"
-            aria-label="swipe right"
-          >
-            &rarr;
-          </button>
-        </div>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            swipe("backward", -5, 0);
+          }}
+          className="swipe-btn left-btn"
+          aria-label="swipe left"
+        >
+          &larr;
+        </button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            swipe("forward", 5, 0);
+          }}
+          className="swipe-btn right-btn"
+          aria-label="swipe right"
+        >
+          &rarr;
+        </button>
         <figcaption className="dish-name">{dish.name}</figcaption>
       </figure>
 

@@ -25,15 +25,36 @@ img {
   justify-content: center;
 }
 
-.swipe-btns {
-  margin-top: 0.75em;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-evenly;
+.attribution a,
+a:visited {
+  color: rgb(var(--primary-color));
 }
 
-.swipe-btn {
+.dishcard {
+  display: grid;
+  grid-template-areas:
+    "photo  photo"
+    "left-btn  right-btn"
+    "name  name";
+}
+
+.image-container {
+  grid-area: photo;
+}
+
+.left-btn {
+  grid-area: left-btn;
+}
+
+.right-btn {
+  grid-area: right-btn;
+}
+
+.left-btn,
+.right-btn {
+  align-self: center;
+  justify-self: center;
+  margin-top: 0.5em;
   background: none;
   background-color: rgb(var(--primary-color));
   color: rgb(var(--background-color));
@@ -47,7 +68,21 @@ img {
   box-shadow: 0 0 2px grey;
 }
 
-.attribution a,
-a:visited {
-  color: rgb(var(--primary-color));
+.dish-name {
+  grid-area: name;
+}
+
+@media only screen and (min-width: 700px) {
+  .dishcard {
+    display: grid;
+    grid-template-areas: "left-btn photo right-btn" "name name name";
+  }
+
+  .dish-name {
+    font-size: 1.75em;
+  }
+  .attribution {
+    font-size: 0.75em;
+    margin-top: 0.5em;
+  }
 }

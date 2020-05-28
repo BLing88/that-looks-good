@@ -45,3 +45,7 @@
 .attribution a {
   color: rgb(var(--background-color));
 }
+
+.description {
+  margin-top: 2em;
+}
