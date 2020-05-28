@@ -5,7 +5,7 @@ const dishes = [
   },
   {
     name: "Wonton soup",
-    id: "P5IhVmH6FoM",
+    id: "ZQE6dAsiwbM",
   },
   {
     name: "Beef noodle soup (牛肉麵)",
@@ -37,11 +37,19 @@ const dishes = [
   },
   {
     name: "Chow mein",
-    id: "mdWyghy08vg",
+    id: "wEBg_pYtynw",
   },
   {
     name: "Pin rice noodles (銀針粉)",
     id: "5JyStjsZbUc",
+  },
+  {
+    name: "Steamed fish (清蒸魚)",
+    id: "aNE4i_MPRxM",
+  },
+  {
+    name: "Cantonese poached chicken (白切雞)",
+    id: "kXQPhdg6SXg",
   },
 ];
 

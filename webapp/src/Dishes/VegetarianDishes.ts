@@ -23,6 +23,18 @@ const dishes = [
     name: "Chickpea salad",
     id: "HGNIpWrA0hw",
   },
+  {
+    name: "Berry smoothie bowl",
+    id: "0PjX9WhsiDs",
+  },
+  {
+    name: "Tofu curry",
+    id: "dv5aVQ1H-0U",
+  },
+  {
+    name: "Cauliflower and hazelnut salad",
+    id: "E4ZxCUrEX2g",
+  },
 ];
 
 export const VegetarianDishes = dishes.map((dish) => ({

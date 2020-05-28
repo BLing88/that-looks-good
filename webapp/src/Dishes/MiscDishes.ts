@@ -37,7 +37,7 @@ const dishes = [
   },
   {
     name: "Shakshuka",
-    id: "rzPVSqQjjqs",
+    id: "422N7Nwq5XY",
   },
   {
     name: "French onion soup",
@@ -66,6 +66,30 @@ const dishes = [
   {
     name: "Pan seared salmon",
     id: "bpPTlXWTOvg",
+  },
+  {
+    name: "Paella",
+    id: "pbPgTHbJZlw",
+  },
+  {
+    name: "Steak",
+    id: "-xAzv74ON24",
+  },
+  {
+    name: "Oysters",
+    id: "y76F3TFw9KY",
+  },
+  {
+    name: "Chicken nugget quesadilla",
+    id: "7d6LWcrshgg",
+  },
+  {
+    name: "Pizza, chicken nuggets, and fries",
+    id: "kJw28zGOxoE",
+  },
+  {
+    name: "Ribs",
+    id: "kctt4tL1dkE",
   },
 ];
 

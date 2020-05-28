@@ -43,6 +43,18 @@ const dishes = [
     name: "Tenpura",
     id: "paMbZ0iNka8",
   },
+  {
+    name: "Katsu curry ramen",
+    id: "hQJQcQSoYUw",
+  },
+  {
+    name: "Mazesoba",
+    id: "hdfIOjp8ABE",
+  },
+  {
+    name: "Ikura don",
+    id: "KS4-rGCgPUQ",
+  },
 ];
 
 export const JapaneseDishes = dishes.map((dish) => ({

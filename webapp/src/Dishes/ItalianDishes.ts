@@ -39,6 +39,10 @@ const dishes = [
     name: "Ravioli",
     id: "Qjxfm-OuoMA",
   },
+  {
+    name: "Mushroom risotto",
+    id: "X0vTYDNL6XI",
+  },
 ];
 
 export const ItalianDishes = dishes.map((dish) => ({

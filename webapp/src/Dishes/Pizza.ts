@@ -11,6 +11,10 @@ const dishes = [
     name: "Calzone",
     id: "rcUw6b4iYe0",
   },
+  {
+    name: "Pepperoni and sausage pizza",
+    id: "NQDNtKKO2fA",
+  },
 ];
 
 export const Pizza = dishes.map((dish) => ({
