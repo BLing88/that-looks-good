@@ -12,7 +12,7 @@ export const UndoReset = ({
 }) => {
   return (
     <div className={`${styles.undoModal} ${className}`}>
-      <p className={styles.message}>Didn&rsquo;t mean to do that?</p>
+      <p className={styles.message}>Didn&rsquo;t mean to reset?</p>
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -20,7 +20,7 @@ export const UndoReset = ({
         }}
         className={styles.undoBtn}
       >
-        Undo reset
+        Undo
       </button>
       <button
         onClick={(e) => {
