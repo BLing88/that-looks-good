@@ -1,0 +1,32 @@
+.landingPage {
+  background-color: rgb(219, 80, 53);
+  height: 100vh;
+  padding: 1.5em;
+  color: rgb(var(--background-color));
+}
+
+.top {
+  display: grid;
+  grid-template-areas: "title login";
+  gap: 0 1em;
+  align-items: center;
+  margin: 1em 0 2em 0;
+}
+
+.title {
+  /* font-size: 1.75em; */
+  text-align: center;
+  margin-top: 0;
+  grid-area: title;
+  margin: auto auto;
+  line-height: 1em;
+}
+
+.loginBtn {
+  cursor: pointer;
+  background-color: rgb(var(--background-color));
+  border: none;
+  box-shadow: 0 0 3px grey;
+  grid-area: login;
+  border-radius: 3px;
+}
