@@ -3,10 +3,26 @@ import { RedirectLoginOptions } from "@auth0/auth0-spa-js";
 import styles from "./LandingPage.module.css";
 
 const photoUrls = [
-  "joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg",
-  "casey-lee-awj7sRviVXo-unsplash.jpg",
-  "cayla1-w6ftFbPCs9I-unsplash.jpg",
-  "edgar-castrejon-1SPu0KT-Ejg-unsplash.jpg",
+  {
+    url: "joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg",
+    photographer: "Joseph Gonzalez",
+    handle: "@miracletwentyone",
+  },
+  {
+    url: "casey-lee-awj7sRviVXo-unsplash.jpg",
+    photographer: "Casey Lee",
+    handle: "@simplethemes",
+  },
+  {
+    url: "cayla1-w6ftFbPCs9I-unsplash.jpg",
+    photographer: "Cayla1",
+    handle: "@calya1",
+  },
+  {
+    url: "edgar-castrejon-1SPu0KT-Ejg-unsplash.jpg",
+    photographer: "Edgar Castrejon",
+    handle: "@edgarraw",
+  },
 ];
 
 const animationTimeStep = 1000 / 60; // animation rate in milliseconds
@@ -19,20 +35,27 @@ interface AnimationState {
   photoUrlIndex: number;
 }
 
+interface animationAction {
+  type: string;
+}
+
 const initialState = {
   xPosition: 0,
   photoUrlIndex: 0,
 };
+const updateToRight = "animation update right";
+const updateNextState = "next state";
+const updateToLeft = "animation update left";
 const animationReducer = (
   state: AnimationState,
-  action: any
+  action: animationAction
 ): AnimationState => {
   switch (action.type) {
-    case "animation update right":
+    case updateToRight:
       return { ...state, xPosition: state.xPosition + 10 };
-    case "animation update left":
+    case updateToLeft:
       return { ...state, xPosition: state.xPosition - 10 };
-    case "next state":
+    case updateNextState:
       return {
         xPosition: 0,
         photoUrlIndex: (state.photoUrlIndex + 1) % photoUrls.length,
@@ -64,21 +87,21 @@ export const LandingPage = ({
     const animationInterval = setInterval(() => {
       if (index % 2 === 0) {
         const interval = setInterval(() => {
-          dispatch({ type: "animation update right" });
+          dispatch({ type: updateToRight });
         }, animationTimeStep);
         setTimeout(() => {
           clearInterval(interval);
           index = (index + 1) % photoUrls.length;
-          dispatch({ type: "next state" });
+          dispatch({ type: updateNextState });
         }, transitionDuration);
       } else {
         const interval = setInterval(() => {
-          dispatch({ type: "animation update left" });
+          dispatch({ type: updateToLeft });
         }, animationTimeStep);
         setTimeout(() => {
           clearInterval(interval);
           index = (index + 1) % photoUrls.length;
-          dispatch({ type: "next state" });
+          dispatch({ type: updateNextState });
         }, transitionDuration);
       }
     }, timeStep);
@@ -101,14 +124,27 @@ export const LandingPage = ({
 
       <figure className={styles.photos}>
         <img
-          src={require(`../../assets/${photoUrls[state.photoUrlIndex]}`)}
+          src={require(`../../assets/${photoUrls[state.photoUrlIndex].url}`)}
           alt="food"
           style={loadedStyle}
         />
+        <img // to preload next image to prevent flashing in between
+          src={require(`../../assets/${
+            photoUrls[(state.photoUrlIndex + 1) % photoUrls.length].url
+          }`)}
+          alt="food"
+          style={{ height: "1px", width: "1px" }}
+        />
         <figcaption className={styles.attribution}>
           Photo by{" "}
-          <a href="#" target="_blank" rel="noreferrer noopener">
-            Photographer
+          <a
+            href={`https://unsplash.com/${
+              photoUrls[state.photoUrlIndex].handle
+            }/?utm_source=That Looks Good&utm_medium=referral`}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            {photoUrls[state.photoUrlIndex].photographer}
           </a>{" "}
           on{" "}
           <a
@@ -126,6 +162,7 @@ export const LandingPage = ({
         right on the dishes that look good and left on the ones that don't. Then
         simply choose from the ones you liked!{" "}
       </p>
+      {/* <footer>Check out the Github repo for more details about this project.</footer> */}
     </main>
   );
 };
