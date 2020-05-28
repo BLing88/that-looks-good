@@ -125,14 +125,14 @@ export const LandingPage = ({
       <figure className={styles.photos}>
         <img
           src={require(`../../assets/${photoUrls[state.photoUrlIndex].url}`)}
-          alt="food"
+          alt="stock images of food"
           style={loadedStyle}
         />
         <img // to preload next image to prevent flashing in between
           src={require(`../../assets/${
             photoUrls[(state.photoUrlIndex + 1) % photoUrls.length].url
           }`)}
-          alt="food"
+          alt="stock images of food"
           style={{ height: "1px", width: "1px" }}
         />
         <figcaption className={styles.attribution}>
