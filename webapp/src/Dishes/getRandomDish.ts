@@ -80,31 +80,4 @@ function getRandomDish(probDist: number[]): DatabaseDish {
   }
 }
 
-// console.log(getRandomCategory([0.35, 0.15, 0.25, 0.2, 0.05]));
-
 export { getRandomDish };
-// let zeros = 0;
-// let ones = 0;
-// let twos = 0;
-// let threes = 0;
-// let fours = 0;
-// const N = 5000;
-// for (let i = 0; i < N; i++) {
-//   const random = nonUniformDistribution([0.35, 0.15, 0.25, 0.2, 0.05]);
-//   if (random === 0) {
-//     zeros++;
-//   } else if (random === 1) {
-//     ones++;
-//   } else if (random === 2) {
-//     twos++;
-//   } else if (random === 3) {
-//     threes++;
-//   } else {
-//     fours++;
-//   }
-// }
-// console.log("zeros", zeros / N);
-// console.log("ones", ones / N);
-// console.log("twos", twos / N);
-// console.log("threes", threes / N);
-// console.log("fours", fours / N);
