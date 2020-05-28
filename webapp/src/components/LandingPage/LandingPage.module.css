@@ -28,6 +28,7 @@
   box-shadow: 0 0 3px grey;
   grid-area: login;
   border-radius: 3px;
+  max-width: 6em;
 }
 
 .photos {
