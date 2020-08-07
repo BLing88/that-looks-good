@@ -5,6 +5,7 @@
 }
 
 .like-page {
+  position: relative;
   margin-top: 2em;
 }
 
@@ -19,6 +20,27 @@
 
 .like-page li:not(:last-child) {
   margin-bottom: 0.35em;
+}
+
+.liked-dishes-list:hover {
+  cursor: pointer;
+}
+
+.like-grid {
+  display: grid;
+  grid-template-areas: "together";
+}
+
+.liked-dishes-list {
+  grid-area: together;
+}
+
+.dish-image {
+  cursor: pointer;
+  grid-area: together;
+  opacity: 100%;
+  justify-self: center;
+  box-shadow: 0 0 5px rgba(128, 128, 128, 0.8);
 }
 
 .no-likes-page {
