@@ -692,7 +692,7 @@ describe("AuthenticatedApp", () => {
     userEvent.click(getByText(/reset/i));
     expect(queryByText(randomDatabaseDish1.name)).not.toBeInTheDocument();
     expect(queryByText(randomDatabaseDish2.name)).not.toBeInTheDocument();
-    expect(getByText(/you haven't liked any dishes yet/i)).toBeInTheDocument();
+    expect(getByText(/you haven’t liked any dishes yet/i)).toBeInTheDocument();
   });
 
   test("toggles Liked button when toggling DishCard or LikePage", async () => {
