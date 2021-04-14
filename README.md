@@ -1,6 +1,6 @@
 # That Looks Good
 
-Check it out at https://that-looks-good.now.sh (username: guestuser, password: guestuserpassword123\$)
+Check it out at https://that-looks-good.vercel.app (username: guestuser, password: guestuserpassword123\$)
 
 ![gif of That Looks Good](./that-looks-good.gif)
 
