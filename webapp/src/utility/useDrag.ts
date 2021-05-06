@@ -1,38 +1,49 @@
-import { useReducer, TouchEvent } from "react";
+import { useReducer, PointerEvent } from "react";
 
 const START = "start";
 const MOVING = "moving";
 const FINISH = "finish";
+const RESET = "reset";
 
 interface DisplacementVector {
   deltaX: number;
   deltaY: number;
-  [propName: string]: number;
+  startX: number;
+  startY: number;
+  //[propName: string]: number;
 }
 
 interface ReducerAction {
-  type: string;
+  type: typeof START | typeof MOVING | typeof FINISH | typeof RESET;
   [propName: string]: any;
 }
 
-const initialDragVector: DisplacementVector = {
+interface PointerDown {
+  pointerDown: boolean;
+}
+
+type DragState = DisplacementVector & PointerDown;
+
+const initialState: DragState = {
   startX: 0,
   startY: 0,
   deltaX: 0,
   deltaY: 0,
+  pointerDown: false,
 };
 
 const dragPosReducer = (
-  state: DisplacementVector,
+  state: DisplacementVector & PointerDown,
   action: ReducerAction
-): DisplacementVector => {
+): DragState => {
   switch (action.type) {
     case START:
       return {
         ...state,
         startX: action.startX,
         startY: action.startY,
-      };
+        pointerDown: true,
+      } as DragState;
     case MOVING:
       return {
         ...state,
@@ -40,42 +51,50 @@ const dragPosReducer = (
         deltaY: action.finishY - state.startY,
       };
     case FINISH:
-      return initialDragVector;
+      return initialState;
+    case RESET:
     default:
       return state;
   }
 };
 
 interface DragDispatchObject {
-  start: (e: TouchEvent) => void;
-  moving: (e: TouchEvent) => void;
-  finish: (f: (e?: TouchEvent) => void) => void;
+  start: (e: PointerEvent) => void;
+  moving: (e: PointerEvent) => void;
+  finish: (f: (e?: PointerEvent) => void) => void;
+  reset: () => void;
 }
 
-export const useDrag = (): [number, number, DragDispatchObject] => {
-  const [dragState, dispatch] = useReducer(dragPosReducer, initialDragVector);
+export const useDrag = (): [number, number, boolean, DragDispatchObject] => {
+  const [dragState, dispatch] = useReducer(dragPosReducer, initialState);
   const dragDispatch = {
-    start: (e: TouchEvent): void => {
+    start: (e: PointerEvent): void => {
       dispatch({
         type: START,
-        startX: e.touches[0].clientX,
-        startY: e.touches[0].clientY,
+        startX: e.clientX,
+        startY: e.clientY,
       });
     },
-    moving: (e: TouchEvent): void => {
+    moving: (e: PointerEvent): void => {
       dispatch({
         type: MOVING,
-        finishX: e.touches[0].clientX,
-        finishY: e.touches[0].clientY,
+        finishX: e.clientX,
+        finishY: e.clientY,
       });
     },
-    finish: (finishHandler: (e?: TouchEvent) => void): void => {
+    finish: (finishHandler: (e?: PointerEvent) => void): void => {
       dispatch({
         type: FINISH,
       });
       finishHandler();
     },
+    reset: () => dispatch({ type: RESET }),
   };
 
-  return [dragState.deltaX, dragState.deltaY, dragDispatch];
+  return [
+    dragState.deltaX,
+    dragState.deltaY,
+    dragState.pointerDown,
+    dragDispatch,
+  ];
 };
