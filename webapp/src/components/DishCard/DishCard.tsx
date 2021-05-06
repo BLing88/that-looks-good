@@ -44,7 +44,7 @@ const DishCard = ({
   dish: Dish;
   changeImageHandler: (direction: string) => void;
 }) => {
-  const [deltaX, deltaY, dragDispatch] = useDrag();
+  const [deltaX, deltaY, pointerDown, dragDispatch] = useDrag();
   const [imgLoaded, setImgLoaded] = useState(false);
   const [transition, setTransition] = useState(initialTransition);
 
@@ -107,14 +107,15 @@ const DishCard = ({
         >
           {imgLoaded ? null : <LoadingSpinner width={30} height={30} />}
           <img
-            onTouchStart={(e) => {
+            onPointerDown={(e) => {
               e.stopPropagation();
               dragDispatch.start(e);
             }}
-            onTouchMove={(e) => {
-              dragDispatch.moving(e);
+            onPointerMove={(e) => {
+              pointerDown && dragDispatch.moving(e);
             }}
-            onTouchEnd={swipeHandler}
+            onPointerUp={swipeHandler}
+            onPointerCancel={() => dragDispatch.reset()}
             alt={dish.name}
             src={
               dish.photo.url +
@@ -131,6 +132,7 @@ const DishCard = ({
             onLoad={() => {
               setImgLoaded(true);
             }}
+            draggable="false"
           />
         </div>
         <button
